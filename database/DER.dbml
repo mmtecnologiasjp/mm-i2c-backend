@@ -1,0 +1,107 @@
+Project MMChat {
+  database_type: 'PostgreSQL'
+}
+
+Table users {
+  id int [pk]
+  first_name varchar
+  last_name varchar
+  username varchar
+  email varchar
+  status Status
+  password varchar
+  created_at timestamp
+  updated_at timestamp
+  deleted_at timestamp
+}
+
+Table groups {
+  id int [pk]
+  name varchar
+  creator_id int [ref: > users.id]
+}
+
+Table group_members {
+  group_id int [ref: > groups.id]
+  user_id int [ref: > users.id]
+}
+
+Table group_messages {
+  id int [pk]
+  content varchar
+  timestamp datetime
+  sender_id int [ref: > users.id]
+  group_id int [ref: > groups.id]
+}
+
+Table private_conversations {
+  id int [pk]
+}
+
+Table private_conversation_members {
+  conversation_id int [ref: > private_conversations.id]
+  user_id int [ref: > users.id]
+}
+
+Table private_messages {
+  id int [pk]
+  content varchar
+  timestamp datetime
+  sender_id int [ref: > users.id]
+  conversation_id int [ref: > private_conversations.id]
+}
+
+Table tasks_assignees {
+  id int [pk]
+  taks_id int [ref: > tasks.id]
+  user_id int [ref: > users.id]
+  created_at timestamp
+}
+
+Table tasks {
+  id int [pk]
+  title varchar
+  description varchar
+  label varchar
+  state varchar
+  priority PriorityEnum
+  sprint varchar
+  private_conversation_id int [ref: > private_messages.id]
+  group_id int [ref: > groups.id]
+  creator_id int [ref: > users.id]
+}
+
+Table contents {
+  uuid int
+  content text
+  private_conversation_id int [ref: > private_messages.id]
+  group_id int [ref: > groups.id]
+  owner_id int [ref: > users.id]
+  type ContentTypeEnum
+  created_at timestamp
+  updated_at timestamp
+  deleted_at timestamp
+}
+
+Enum PriorityEnum {
+  Urgent
+  High
+  Medium
+  Low
+  Lowest
+}
+
+Enum Status {
+  Active
+  Inactive
+  Banned
+  Quarantine
+}
+
+Enum ContentTypeEnum {
+  note
+  topic
+}
+
+//Relationship
+// > many-to-one; < one-to-many; - one-to-one

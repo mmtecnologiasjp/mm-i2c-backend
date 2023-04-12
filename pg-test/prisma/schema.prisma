@@ -1,0 +1,74 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  uuid       String     @id @default(uuid())
+  first_name String
+  last_name  String?
+  username   String
+  email      String     @unique
+  status     StatusEnum
+  password   String
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+  deleted_at DateTime?
+
+  groups       Group[]
+  group_member Group_Member[]
+  messages     Messages[]
+
+  @@map("users")
+}
+
+model Group {
+  uuid       String @id @default(uuid())
+  name       String
+  user       User   @relation(fields: [creator_id], references: [uuid])
+  creator_id String
+
+  group_member Group_Member[]
+  messages     Messages[]
+
+  @@map("groups")
+}
+
+model Group_Member {
+  uuid      String @id @default(uuid())
+  user      User   @relation(fields: [user_uuid], references: [uuid])
+  user_uuid String @default(uuid())
+
+  group    Group  @relation(fields: [group_id], references: [uuid])
+  group_id String @default(uuid())
+
+  @@map("group_members")
+}
+
+model Messages {
+  uuid      String   @id @default(uuid())
+  content   String
+  timestamp DateTime
+
+  sender    User   @relation(fields: [sender_id], references: [uuid])
+  sender_id String
+
+  group    Group?  @relation(fields: [group_id], references: [uuid])
+  group_id String?
+
+  receiver_id String
+}
+
+enum StatusEnum {
+  Active
+  Inactive
+  Banned
+  Quarantine
+}
