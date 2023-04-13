@@ -149,10 +149,10 @@ model Tasks {
   deleted_at  DateTime?
 
   private_conversation      PrivateConversations? @relation(fields: [private_conversation_uuid], references: [uuid])
-  private_conversation_uuid String
+  private_conversation_uuid String?
 
   group      Group? @relation(fields: [group_uuid], references: [uuid])
-  group_uuid String
+  group_uuid String?
 
   owner      User?  @relation(fields: [owner_uuid], references: [uuid])
   owner_uuid String
@@ -177,14 +177,15 @@ model TasksAssignees {
 model Contents {
   uuid    String @id @default(uuid())
   content String
-
-  private_conversation      PrivateConversations? @relation(fields: [private_conversation_uuid], references: [uuid])
-  private_conversation_uuid String
-
+  title String?
   type ContentTypeEnum
 
+  private_conversation      PrivateConversations? @relation(fields: [private_conversation_uuid], references: [uuid])
+  private_conversation_uuid String?
+
+
   group      Group? @relation(fields: [group_uuid], references: [uuid])
-  group_uuid String
+  group_uuid String?
 
   owner      User?  @relation(fields: [owner_uuid], references: [uuid])
   owner_uuid String
