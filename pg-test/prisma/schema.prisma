@@ -38,18 +38,19 @@ model User {
 model Group {
   uuid      String  @id @default(uuid())
   name      String
+  description String?
   image_url String?
 
-  user       User   @relation(fields: [creator_id], references: [uuid])
-  creator_id String
+  creator       User   @relation(fields: [creator_uuid], references: [uuid])
+  creator_uuid String
 
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
   deleted_at DateTime?
 
-  group_member GroupMembers[]
+  members GroupMembers[]
   tasks        Tasks[]
-  content      Contents[]
+  contents      Contents[]
   messages     Messages[]
   images       Images[]
 
@@ -100,10 +101,10 @@ model Messages {
   content String
 
   private_conversation      PrivateConversations? @relation(fields: [private_conversation_uuid], references: [uuid])
-  private_conversation_uuid String
+  private_conversation_uuid String?
 
   group      Group? @relation(fields: [group_uuid], references: [uuid])
-  group_uuid String
+  group_uuid String?
 
   owner      User?  @relation(fields: [owner_uuid], references: [uuid])
   owner_uuid String
