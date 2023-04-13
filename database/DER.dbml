@@ -20,6 +20,7 @@ Table groups {
   id int [pk]
   name varchar
   image_url varchar
+  description varchar
   creator_id int [ref: > users.id]
 }
 
