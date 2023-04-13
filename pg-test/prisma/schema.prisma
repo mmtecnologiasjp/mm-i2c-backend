@@ -18,14 +18,18 @@ model User {
   email      String     @unique
   status     StatusEnum
   password   String
+  avatar_url     String?
   created_at DateTime   @default(now())
   updated_at DateTime   @updatedAt
   deleted_at DateTime?
 
-  groups               Group[]
-  group_member         Group_Member[]
-  // send_messages     Messages[]     @relation("send_messages")
-  // received_messages Messages[]     @relation("received_messages")
+  groups         Group[]
+  group_member   GroupMembers[]
+  tasks          Tasks[]
+  contents       Contents[]
+  TasksAssignees TasksAssignees[]
+  messages       Messages[]
+  images_sent    Images[]
 
   @@map("users")
 }
@@ -33,15 +37,25 @@ model User {
 model Group {
   uuid       String @id @default(uuid())
   name       String
+  image_url      String?
+
   user       User   @relation(fields: [creator_id], references: [uuid])
   creator_id String
 
-  group_member          Group_Member[]
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
+
+  group_member GroupMembers[]
+  tasks        Tasks[]
+  content      Contents[]
+  messages     Messages[]
+  images       Images[]
 
   @@map("groups")
 }
 
-model Group_Member {
+model GroupMembers {
   uuid      String @id @default(uuid())
   user      User   @relation(fields: [user_uuid], references: [uuid])
   user_uuid String @default(uuid())
@@ -52,44 +66,130 @@ model Group_Member {
   @@map("group_members")
 }
 
-// model Messages {
-//   uuid      String   @id @default(uuid())
-//   content   String
-//   timestamp DateTime
-
-//   sender        User    @relation("send_messages", fields: [sender_uuid], references: [uuid])
-//   sender_uuid   String
-//   receiver      User?   @relation("received_messages", fields: [receiver_uuid], references: [uuid])
-//   receiver_uuid String?
-
-//   group    Group?  @relation(fields: [group_id], references: [uuid])
-//   group_id String?
-
-//   @@map("messages")
-// }
-
 model PrivateConversations {
   uuid String @id @default(uuid())
 
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
+
   members PrivateConversationMembers[]
+  tasks   Tasks[]
+  content Contents[]
+  messages Messages[]
+  images  Images[]
+
+  @@map("private_conversations")
 }
 
 model PrivateConversationMembers {
   uuid String @id @default(uuid())
 
   private_conversation PrivateConversations @relation(fields: [conversation_uuid], references: [uuid])
-  conversation_uuid String
+  conversation_uuid    String
+
+  @@map("private_conversation_members")
 }
 
+
+model Messages {
+  uuid String @id @default(uuid())
+
+  private_conversation      PrivateConversations? @relation(fields: [private_conversation_uuid], references: [uuid])
+  private_conversation_uuid String
+
+  group      Group? @relation(fields: [group_uuid], references: [uuid])
+  group_uuid String
+
+  owner      User?  @relation(fields: [owner_uuid], references: [uuid])
+  owner_uuid String
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
+
+  @@map("messages")
+}
+
+model Images {
+  uuid String @id @default(uuid())
+  url  String
+
+  private_conversation      PrivateConversations? @relation(fields: [private_conversation_uuid], references: [uuid])
+  private_conversation_uuid String
+
+  group      Group? @relation(fields: [group_uuid], references: [uuid])
+  group_uuid String
+
+  owner      User?  @relation(fields: [owner_uuid], references: [uuid])
+  owner_uuid String
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
+
+  @@map("images")
+}
+
+
 model Tasks {
-  uuid                      String       @id @default(uuid())
-  title                     String
-  description               String
-  label                     String
-  state                     String
-  priority                  PriorityEnum
-  sprint                    String
-  private_conservation_uuid String
+  uuid        String       @id @default(uuid())
+  title       String
+  description String
+  label       String
+  state       String
+  priority    PriorityEnum
+  sprint      String
+  created_at     DateTime         @default(now())
+  updated_at     DateTime         @updatedAt
+  deleted_at     DateTime?
+
+  private_conversation      PrivateConversations? @relation(fields: [private_conversation_uuid], references: [uuid])
+  private_conversation_uuid String
+
+  group      Group? @relation(fields: [group_uuid], references: [uuid])
+  group_uuid String
+
+  owner      User?  @relation(fields: [owner_uuid], references: [uuid])
+  owner_uuid String
+
+  task_assignees TasksAssignees[]
+
+  @@map("tasks")
+}
+
+model TasksAssignees {
+  uuid String @id @default(uuid())
+
+  task      Tasks  @relation(fields: [task_uuid], references: [uuid])
+  task_uuid String
+
+  user      User   @relation(fields: [user_uuid], references: [uuid])
+  user_uuid String
+
+  @@map("tasks_assignees")
+}
+
+model Contents {
+  uuid    String @id @default(uuid())
+  content String
+
+  private_conversation      PrivateConversations? @relation(fields: [private_conversation_uuid], references: [uuid])
+  private_conversation_uuid String
+
+  type ContentTypeEnum
+
+  group      Group? @relation(fields: [group_uuid], references: [uuid])
+  group_uuid String
+
+  owner      User?  @relation(fields: [owner_uuid], references: [uuid])
+  owner_uuid String
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
+
+  @@map("contents")
 }
 
 enum StatusEnum {
@@ -105,4 +205,9 @@ enum PriorityEnum {
   Medium
   Low
   Lowest
+}
+
+enum ContentTypeEnum {
+  note
+  topic
 }
