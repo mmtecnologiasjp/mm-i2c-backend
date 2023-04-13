@@ -18,26 +18,27 @@ model User {
   email      String     @unique
   status     StatusEnum
   password   String
-  avatar_url     String?
+  avatar_url String?
   created_at DateTime   @default(now())
   updated_at DateTime   @updatedAt
   deleted_at DateTime?
 
-  groups         Group[]
-  group_member   GroupMembers[]
-  tasks          Tasks[]
-  contents       Contents[]
-  TasksAssignees TasksAssignees[]
-  messages       Messages[]
-  images_sent    Images[]
+  groups                Group[]
+  group_member          GroupMembers[]
+  tasks                 Tasks[]
+  contents              Contents[]
+  assignee_to           TasksAssignees[]
+  messages              Messages[]
+  images_sent           Images[]
+  private_conversations PrivateConversationMembers[]
 
   @@map("users")
 }
 
 model Group {
-  uuid       String @id @default(uuid())
-  name       String
-  image_url      String?
+  uuid      String  @id @default(uuid())
+  name      String
+  image_url String?
 
   user       User   @relation(fields: [creator_id], references: [uuid])
   creator_id String
@@ -73,11 +74,11 @@ model PrivateConversations {
   updated_at DateTime  @updatedAt
   deleted_at DateTime?
 
-  members PrivateConversationMembers[]
-  tasks   Tasks[]
-  content Contents[]
+  members  PrivateConversationMembers[]
+  tasks    Tasks[]
+  content  Contents[]
   messages Messages[]
-  images  Images[]
+  images   Images[]
 
   @@map("private_conversations")
 }
@@ -88,12 +89,15 @@ model PrivateConversationMembers {
   private_conversation PrivateConversations @relation(fields: [conversation_uuid], references: [uuid])
   conversation_uuid    String
 
+  user      User   @relation(fields: [user_uuid], references: [uuid])
+  user_uuid String
+
   @@map("private_conversation_members")
 }
 
-
 model Messages {
-  uuid String @id @default(uuid())
+  uuid    String @id @default(uuid())
+  content String
 
   private_conversation      PrivateConversations? @relation(fields: [private_conversation_uuid], references: [uuid])
   private_conversation_uuid String
@@ -131,7 +135,6 @@ model Images {
   @@map("images")
 }
 
-
 model Tasks {
   uuid        String       @id @default(uuid())
   title       String
@@ -140,9 +143,9 @@ model Tasks {
   state       String
   priority    PriorityEnum
   sprint      String
-  created_at     DateTime         @default(now())
-  updated_at     DateTime         @updatedAt
-  deleted_at     DateTime?
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @updatedAt
+  deleted_at  DateTime?
 
   private_conversation      PrivateConversations? @relation(fields: [private_conversation_uuid], references: [uuid])
   private_conversation_uuid String
