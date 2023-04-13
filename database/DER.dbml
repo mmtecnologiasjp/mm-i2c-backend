@@ -10,6 +10,7 @@ Table users {
   email varchar
   status Status
   password varchar
+  avatar_url varchar
   created_at timestamp
   updated_at timestamp
   deleted_at timestamp
@@ -18,6 +19,7 @@ Table users {
 Table groups {
   id int [pk]
   name varchar
+  image_url varchar
   creator_id int [ref: > users.id]
 }
 
@@ -49,6 +51,18 @@ Table private_messages {
   timestamp datetime
   sender_id int [ref: > users.id]
   conversation_id int [ref: > private_conversations.id]
+}
+
+Table images {
+  id int [pk]
+  url varchar
+  owner_id int [ref: > users.id]
+  group_id int [ref: > groups.id]
+  private_conversation_id int [ref: > private_messages.id]
+  created_at timestamp
+  updated_at timestamp
+  deleted_at timestamp
+
 }
 
 Table tasks_assignees {
