@@ -29,14 +29,6 @@ Table group_members {
   user_id int [ref: > users.id]
 }
 
-Table group_messages {
-  id int [pk]
-  content varchar
-  timestamp datetime
-  sender_id int [ref: > users.id]
-  group_id int [ref: > groups.id]
-}
-
 Table private_conversations {
   id int [pk]
 }
@@ -46,13 +38,17 @@ Table private_conversation_members {
   user_id int [ref: > users.id]
 }
 
-Table private_messages {
+Table messages {
   id int [pk]
-  content varchar
-  timestamp datetime
-  sender_id int [ref: > users.id]
-  conversation_id int [ref: > private_conversations.id]
+  content text
+  private_conversation_id int [ref: > private_messages.id]
+  group_id int [ref: > groups.id]
+  owner_id int [ref: > users.id]
+  created_at timestamp
+  updated_at timestamp
+  deleted_at timestamp
 }
+
 
 Table images {
   id int [pk]
