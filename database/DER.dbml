@@ -41,7 +41,7 @@ Table private_conversation_members {
 Table messages {
   id int [pk]
   content text
-  private_conversation_id int [ref: > private_messages.id]
+  private_conversation_id int [ref: > private_conversations.id]
   group_id int [ref: > groups.id]
   owner_id int [ref: > users.id]
   created_at timestamp
@@ -55,7 +55,7 @@ Table images {
   url varchar
   owner_id int [ref: > users.id]
   group_id int [ref: > groups.id]
-  private_conversation_id int [ref: > private_messages.id]
+  private_conversation_id int [ref: > private_conversations.id]
   created_at timestamp
   updated_at timestamp
   deleted_at timestamp
@@ -77,7 +77,7 @@ Table tasks {
   state varchar
   priority PriorityEnum
   sprint varchar
-  private_conversation_id int [ref: > private_messages.id]
+  private_conversation_id int [ref: > private_conversations.id]
   group_id int [ref: > groups.id]
   creator_id int [ref: > users.id]
 }
@@ -85,7 +85,7 @@ Table tasks {
 Table contents {
   uuid int
   content text
-  private_conversation_id int [ref: > private_messages.id]
+  private_conversation_id int [ref: > private_conversations.id]
   group_id int [ref: > groups.id]
   owner_id int [ref: > users.id]
   type ContentTypeEnum
