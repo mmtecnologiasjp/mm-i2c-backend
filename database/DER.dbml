@@ -39,7 +39,6 @@ Table group_members {
   deleted_at timestamp
 }
 
-
 Table messages {
   uuid uuid
   content text
@@ -50,7 +49,6 @@ Table messages {
   updated_at timestamp
   deleted_at timestamp
 }
-
 
 Table message_metadata {
   uuid uuid
