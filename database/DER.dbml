@@ -61,11 +61,24 @@ Table message_metadata {
   deleted_at timestamp
 }
 
-Table images {
+Table storage_files {
   uuid uuid
+  filename varchar
+  path varchar
   url varchar
-  owner_id int [ref: > users.uuid]
-  group_id int [ref: > groups.uuid]
+  size_bytes bigint
+
+  reated_at timestamp
+  updated_at timestamp
+  deleted_at timestamp
+}
+
+Table storage_files_metadata {
+  uuid uuid
+  file_uuid int [ref: > storage_files.uuid]
+  key varchar
+  value varchar
+
   created_at timestamp
   updated_at timestamp
   deleted_at timestamp
