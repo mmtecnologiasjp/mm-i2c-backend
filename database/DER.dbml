@@ -3,7 +3,7 @@ Project MMChat {
 }
 
 Table users {
-  id int [pk]
+  uuid uuid
   first_name varchar
   last_name varchar
   username varchar
@@ -11,62 +11,75 @@ Table users {
   status Status
   password varchar
   avatar_url varchar
+
   created_at timestamp
   updated_at timestamp
   deleted_at timestamp
 }
 
 Table groups {
-  id int [pk]
+  uuid uuid
   name varchar
   image_url varchar
   description varchar
-  creator_id int [ref: > users.id]
+  creator_uuid int [ref: > users.uuid]
+
+  created_at timestamp
+  updated_at timestamp
+  deleted_at timestamp
 }
 
 Table group_members {
-  group_id int [ref: > groups.id]
-  user_id int [ref: > users.id]
+  uuid uuid
+  group_uuid uuid [ref: > groups.uuid]
+  user_uuid int [ref: > users.uuid]
+
+  created_at timestamp
+  updated_at timestamp
+  deleted_at timestamp
 }
 
-Table private_conversations {
-  id int [pk]
-}
-
-Table private_conversation_members {
-  conversation_id int [ref: > private_conversations.id]
-  user_id int [ref: > users.id]
-}
 
 Table messages {
-  id int [pk]
+  uuid uuid
   content text
-  private_conversation_id int [ref: > private_conversations.id]
-  group_id int [ref: > groups.id]
-  owner_id int [ref: > users.id]
+  group_id int [ref: > groups.uuid]
+  sender_uuid uuid [ref: > users.uuid]
+  receiver_uuid uuid [ref: > users.uuid]
   created_at timestamp
   updated_at timestamp
   deleted_at timestamp
 }
 
 
-Table images {
-  id int [pk]
-  url varchar
-  owner_id int [ref: > users.id]
-  group_id int [ref: > groups.id]
-  private_conversation_id int [ref: > private_conversations.id]
+Table message_metadata {
+  uuid uuid
+  message_uuid int [ref: > messages.uuid]
+  key varchar
+  value varchar
+
   created_at timestamp
   updated_at timestamp
   deleted_at timestamp
+}
 
+Table images {
+  uuid uuid
+  url varchar
+  owner_id int [ref: > users.uuid]
+  group_id int [ref: > groups.uuid]
+  created_at timestamp
+  updated_at timestamp
+  deleted_at timestamp
 }
 
 Table tasks_assignees {
-  id int [pk]
+  uuid uuid
   taks_id int [ref: > tasks.id]
-  user_id int [ref: > users.id]
+  user_id int [ref: > users.uuid]
   created_at timestamp
+  updated_at timestamp
+  deleted_at timestamp
 }
 
 Table tasks {
@@ -77,17 +90,21 @@ Table tasks {
   state varchar
   priority PriorityEnum
   sprint varchar
-  private_conversation_id int [ref: > private_conversations.id]
-  group_id int [ref: > groups.id]
-  creator_id int [ref: > users.id]
+  group_id int [ref: > groups.uuid]
+  sender_uuid uuid [ref: > users.uuid]
+  receiver_uuid uuid [ref: > users.uuid]
+
+  created_at timestamp
+  updated_at timestamp
+  deleted_at timestamp
 }
 
 Table contents {
   uuid int
   content text
-  private_conversation_id int [ref: > private_conversations.id]
-  group_id int [ref: > groups.id]
-  owner_id int [ref: > users.id]
+  group_uuid int [ref: > groups.uuid]
+  sender_uuid int [ref: > users.uuid]
+  receiver_uuid uuid [ref: > users.uuid]
   type ContentTypeEnum
   created_at timestamp
   updated_at timestamp
