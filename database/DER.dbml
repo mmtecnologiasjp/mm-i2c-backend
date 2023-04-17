@@ -45,12 +45,13 @@ Table messages {
   group_id int [ref: > groups.uuid]
   sender_uuid uuid [ref: > users.uuid]
   receiver_uuid uuid [ref: > users.uuid]
+  type MessageTypeEnum
   created_at timestamp
   updated_at timestamp
   deleted_at timestamp
 }
 
-Table message_metadata {
+Table messages_metadata {
   uuid uuid
   message_uuid int [ref: > messages.uuid]
   key varchar
@@ -68,7 +69,7 @@ Table storage_files {
   url varchar
   size_bytes bigint
 
-  reated_at timestamp
+  created_at timestamp
   updated_at timestamp
   deleted_at timestamp
 }
@@ -140,6 +141,18 @@ Enum Status {
 Enum ContentTypeEnum {
   note
   topic
+}
+
+
+Enum MessageTypeEnum {
+  text
+  image
+  video
+  audio
+  file
+  topic
+  note
+  task
 }
 
 //Relationship
