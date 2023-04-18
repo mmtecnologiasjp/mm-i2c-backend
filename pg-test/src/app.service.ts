@@ -4,12 +4,12 @@ import { prisma } from 'prisma/client';
 @Injectable()
 export class AppService {
   async getHello() {
-    const messages = await prisma.messages.findMany({
+    const messages = await prisma.privateConversations.findFirst({
       where: {
-        group_uuid: '01',
+        from_uuid: '01',
       },
       include: {
-        group: true,
+        messages: true,
       },
     });
 

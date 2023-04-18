@@ -23,17 +23,17 @@ model User {
   updated_at DateTime   @updatedAt
   deleted_at DateTime?
 
-  groups            Group[]
-  group_member      GroupMembers[]
-  assignee_to       TasksAssignees[]
-  messages_metadata MessagesMetadata[]
-  tasks_sent       Tasks[]
-  tasks_received  Tasks[]             @relation("TasksReceived")
-  contents_sent    Contents[]
-  contents_received Contents[]        @relation("ContentsReceived")
+  groups                     Group[]
+  group_member               GroupMembers[]
+  assignee_to                TasksAssignees[]
+  messages_metadata          MessagesMetadata[]
+  tasks_sent                 Tasks[]
+  tasks_received             Tasks[]                @relation("TasksReceived")
+  contents_sent              Contents[]
+  contents_received          Contents[]             @relation("ContentsReceived")
   private_conversations_from PrivateConversations[]
   private_conversations_to   PrivateConversations[] @relation("PrivateConversationsTo")
-  send_messages Messages[]
+  send_messages              Messages[]
 
   @@map("users")
 }
@@ -73,10 +73,10 @@ model GroupMembers {
 model PrivateConversations {
   uuid String @id @default(uuid())
 
-  user1    User   @relation(fields: [from_uuid], references: [uuid])
+  from      User   @relation(fields: [from_uuid], references: [uuid])
   from_uuid String
 
-  user2       User   @relation("PrivateConversationsTo", fields: [to_uuid], references: [uuid])
+  to      User   @relation("PrivateConversationsTo", fields: [to_uuid], references: [uuid])
   to_uuid String
 
   created_at DateTime  @default(now())
@@ -95,13 +95,13 @@ model Messages {
   group      Group?  @relation(fields: [group_uuid], references: [uuid])
   group_uuid String?
 
-  private_conversation      PrivateConversations?  @relation(fields: [private_conversation_uuid], references: [uuid])
+  private_conversation      PrivateConversations? @relation(fields: [private_conversation_uuid], references: [uuid])
   private_conversation_uuid String?
 
   sender      User   @relation(fields: [sender_uuid], references: [uuid])
   sender_uuid String
 
-  type   MessageTypeEnum
+  type MessageTypeEnum
 
   created_at        DateTime           @default(now())
   updated_at        DateTime           @updatedAt

@@ -54,6 +54,9 @@ Table messages {
   content text
   group_uuid uuid [ref: > groups.uuid]
   private_conversation_uuid uuid [ref: > private_conversations.uuid]
+  sender uuid [ref: > users.uuid]
+
+
   type MessageTypeEnum
   created_at timestamp
   updated_at timestamp
@@ -113,8 +116,6 @@ Table tasks {
   sprint varchar
   group_uuid uuid [ref: > groups.uuid]
   private_conversation_uuid uuid [ref: > private_conversations.uuid]
-  // sender_uuid uuid [ref: > users.uuid]
-  // receiver_uuid uuid [ref: > users.uuid]
 
   created_at timestamp
   updated_at timestamp
