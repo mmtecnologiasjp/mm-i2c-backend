@@ -10,7 +10,6 @@ export class AppService {
       },
       include: {
         group: true,
-        owner: true,
       },
     });
 

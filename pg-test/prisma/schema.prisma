@@ -23,36 +23,37 @@ model User {
   updated_at DateTime   @updatedAt
   deleted_at DateTime?
 
-  groups                Group[]
-  group_member          GroupMembers[]
-  tasks                 Tasks[]
-  contents              Contents[]
-  assignee_to           TasksAssignees[]
-  messages              Messages[]
-  images_sent           Images[]
-  private_conversations PrivateConversationMembers[]
+  groups            Group[]
+  group_member      GroupMembers[]
+  assignee_to       TasksAssignees[]
+  messages_metadata MessagesMetadata[]
+  tasks_sent       Tasks[]
+  tasks_received  Tasks[]             @relation("TasksReceived")
+  contents_sent    Contents[]
+  contents_received Contents[]        @relation("ContentsReceived")
+  private_conversations_from PrivateConversations[]
+  private_conversations_to   PrivateConversations[] @relation("PrivateConversationsTo")
 
   @@map("users")
 }
 
 model Group {
-  uuid      String  @id @default(uuid())
-  name      String
+  uuid        String  @id @default(uuid())
+  name        String
   description String?
-  image_url String?
+  image_url   String?
 
-  creator       User   @relation(fields: [creator_uuid], references: [uuid])
+  creator      User   @relation(fields: [creator_uuid], references: [uuid])
   creator_uuid String
 
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
   deleted_at DateTime?
 
-  members GroupMembers[]
-  tasks        Tasks[]
-  contents      Contents[]
-  messages     Messages[]
-  images       Images[]
+  members  GroupMembers[]
+  tasks    Tasks[]
+  contents Contents[]
+  messages Messages[]
 
   @@map("groups")
 }
@@ -71,69 +72,87 @@ model GroupMembers {
 model PrivateConversations {
   uuid String @id @default(uuid())
 
+  from     User   @relation(fields: [from_uuid], references: [uuid])
+  from_uuid String
+
+  to       User   @relation("PrivateConversationsTo", fields: [to_uuid], references: [uuid])
+  to_uuid String
+
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
   deleted_at DateTime?
 
-  members  PrivateConversationMembers[]
-  tasks    Tasks[]
-  content  Contents[]
   messages Messages[]
-  images   Images[]
 
   @@map("private_conversations")
-}
-
-model PrivateConversationMembers {
-  uuid String @id @default(uuid())
-
-  private_conversation PrivateConversations @relation(fields: [conversation_uuid], references: [uuid])
-  conversation_uuid    String
-
-  user      User   @relation(fields: [user_uuid], references: [uuid])
-  user_uuid String
-
-  @@map("private_conversation_members")
 }
 
 model Messages {
   uuid    String @id @default(uuid())
   content String
 
-  private_conversation      PrivateConversations? @relation(fields: [private_conversation_uuid], references: [uuid])
-  private_conversation_uuid String?
-
-  group      Group? @relation(fields: [group_uuid], references: [uuid])
+  group      Group?  @relation(fields: [group_uuid], references: [uuid])
   group_uuid String?
 
-  owner      User?  @relation(fields: [owner_uuid], references: [uuid])
-  owner_uuid String
+  private_conversation      PrivateConversations?  @relation(fields: [private_conversation_uuid], references: [uuid])
+  private_conversation_uuid String?
 
-  created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt
-  deleted_at DateTime?
+  type   MessageTypeEnum
+
+  created_at        DateTime           @default(now())
+  updated_at        DateTime           @updatedAt
+  deleted_at        DateTime?
+  messages_metadata MessagesMetadata[]
 
   @@map("messages")
 }
 
-model Images {
-  uuid String @id @default(uuid())
-  url  String
+model MessagesMetadata {
+  uuid  String @id @default(uuid())
+  key   String
+  value String
 
-  private_conversation      PrivateConversations? @relation(fields: [private_conversation_uuid], references: [uuid])
-  private_conversation_uuid String
+  message      Messages @relation(fields: [message_uuid], references: [uuid])
+  message_uuid String
 
-  group      Group? @relation(fields: [group_uuid], references: [uuid])
-  group_uuid String
-
-  owner      User?  @relation(fields: [owner_uuid], references: [uuid])
-  owner_uuid String
+  user      User   @relation(fields: [user_uuid], references: [uuid])
+  user_uuid String
 
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
   deleted_at DateTime?
 
-  @@map("images")
+  @@map("messages_metadata")
+}
+
+model StorageFiles {
+  uuid       String @id @default(uuid())
+  filename   String
+  path       String
+  url        String
+  size_bytes Int
+
+  created_at           DateTime               @default(now())
+  updated_at           DateTime               @updatedAt
+  deleted_at           DateTime?
+  StorageFilesMetadata StorageFilesMetadata[]
+
+  @@map("storage_files")
+}
+
+model StorageFilesMetadata {
+  uuid  String @id @default(uuid())
+  key   String
+  value String
+
+  file      StorageFiles @relation(fields: [file_uuid], references: [uuid])
+  file_uuid String
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
+
+  @@map("storage_files_metadata")
 }
 
 model Tasks {
@@ -148,14 +167,14 @@ model Tasks {
   updated_at  DateTime     @updatedAt
   deleted_at  DateTime?
 
-  private_conversation      PrivateConversations? @relation(fields: [private_conversation_uuid], references: [uuid])
-  private_conversation_uuid String?
-
-  group      Group? @relation(fields: [group_uuid], references: [uuid])
+  group      Group?  @relation(fields: [group_uuid], references: [uuid])
   group_uuid String?
 
-  owner      User?  @relation(fields: [owner_uuid], references: [uuid])
-  owner_uuid String
+  sender      User   @relation(fields: [sender_uuid], references: [uuid])
+  sender_uuid String
+
+  receiver      User?   @relation("TasksReceived", fields: [receiver_uuid], references: [uuid])
+  receiver_uuid String?
 
   task_assignees TasksAssignees[]
 
@@ -175,20 +194,19 @@ model TasksAssignees {
 }
 
 model Contents {
-  uuid    String @id @default(uuid())
+  uuid    String          @id @default(uuid())
   content String
-  title String?
-  type ContentTypeEnum
+  title   String?
+  type    ContentTypeEnum
 
-  private_conversation      PrivateConversations? @relation(fields: [private_conversation_uuid], references: [uuid])
-  private_conversation_uuid String?
-
-
-  group      Group? @relation(fields: [group_uuid], references: [uuid])
+  group      Group?  @relation(fields: [group_uuid], references: [uuid])
   group_uuid String?
 
-  owner      User?  @relation(fields: [owner_uuid], references: [uuid])
-  owner_uuid String
+  sender      User   @relation(fields: [sender_uuid], references: [uuid])
+  sender_uuid String
+
+  receiver      User?   @relation("ContentsReceived", fields: [receiver_uuid], references: [uuid])
+  receiver_uuid String?
 
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
@@ -215,4 +233,15 @@ enum PriorityEnum {
 enum ContentTypeEnum {
   note
   topic
+}
+
+enum MessageTypeEnum {
+  text
+  image
+  video
+  audio
+  file
+  topic
+  note
+  task
 }

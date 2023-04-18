@@ -39,12 +39,21 @@ Table group_members {
   deleted_at timestamp
 }
 
+Table private_conversations {
+  uuid uuid
+  from uuid [ref: > users.uuid]
+  to uuid [ref: > users.uuid]
+
+  created_at timestamp
+  updated_at timestamp
+  deleted_at timestamp
+}
+
 Table messages {
   uuid uuid
   content text
-  group_id int [ref: > groups.uuid]
-  sender_uuid uuid [ref: > users.uuid]
-  receiver_uuid uuid [ref: > users.uuid]
+  group_uuid uuid [ref: > groups.uuid]
+  private_conversation_uuid uuid [ref: > private_conversations.uuid]
   type MessageTypeEnum
   created_at timestamp
   updated_at timestamp
@@ -102,9 +111,10 @@ Table tasks {
   state varchar
   priority PriorityEnum
   sprint varchar
-  group_id int [ref: > groups.uuid]
-  sender_uuid uuid [ref: > users.uuid]
-  receiver_uuid uuid [ref: > users.uuid]
+  group_uuid uuid [ref: > groups.uuid]
+  private_conversation_uuid uuid [ref: > private_conversations.uuid]
+  // sender_uuid uuid [ref: > users.uuid]
+  // receiver_uuid uuid [ref: > users.uuid]
 
   created_at timestamp
   updated_at timestamp
