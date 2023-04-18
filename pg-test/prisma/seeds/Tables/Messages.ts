@@ -10,14 +10,10 @@ export class MessagesSeeds {
     for (let i = 0; i < 2; i++) {
       const message = await prisma.messages.create({
         data: {
-          uuid: `0${i + 1}`,
           content: faker.lorem.paragraph(12),
-          group_uuid: '01',
-          owner_uuid: `0${i + 1}`,
-          private_conversation_uuid: null,
-          deleted_at: null,
-          created_at: new Date(),
-          updated_at: new Date(),
+          type: 'text',
+          private_conversation_uuid: '01',
+          sender_uuid: `0${i + 1}`,
         },
       });
       console.log(`Created message with id: ${message.uuid}`);
@@ -27,8 +23,9 @@ export class MessagesSeeds {
       const privateMessage = await prisma.messages.create({
         data: {
           content: faker.lorem.paragraph(12),
-          private_conversation_uuid: '02',
-          owner_uuid: faker.helpers.shuffle(['01', '02'])[0],
+          group_uuid: '01',
+          type: 'text',
+          sender_uuid: `02`,
         },
       });
 

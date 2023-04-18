@@ -33,6 +33,7 @@ model User {
   contents_received Contents[]        @relation("ContentsReceived")
   private_conversations_from PrivateConversations[]
   private_conversations_to   PrivateConversations[] @relation("PrivateConversationsTo")
+  send_messages Messages[]
 
   @@map("users")
 }
@@ -72,10 +73,10 @@ model GroupMembers {
 model PrivateConversations {
   uuid String @id @default(uuid())
 
-  from     User   @relation(fields: [from_uuid], references: [uuid])
+  user1    User   @relation(fields: [from_uuid], references: [uuid])
   from_uuid String
 
-  to       User   @relation("PrivateConversationsTo", fields: [to_uuid], references: [uuid])
+  user2       User   @relation("PrivateConversationsTo", fields: [to_uuid], references: [uuid])
   to_uuid String
 
   created_at DateTime  @default(now())
@@ -96,6 +97,9 @@ model Messages {
 
   private_conversation      PrivateConversations?  @relation(fields: [private_conversation_uuid], references: [uuid])
   private_conversation_uuid String?
+
+  sender      User   @relation(fields: [sender_uuid], references: [uuid])
+  sender_uuid String
 
   type   MessageTypeEnum
 

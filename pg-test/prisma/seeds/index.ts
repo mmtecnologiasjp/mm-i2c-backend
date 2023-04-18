@@ -9,12 +9,12 @@ import { TasksSeeds } from './Tables/Tasks';
 import { UsersSeeds } from './Tables/Users';
 
 async function main() {
-  // await UsersSeeds.execute();
-  // await GroupsSeeds.execute();
-  // await GroupMembersSeeds.execute();
-  // await PrivateConversationsSeeds.execute();
+  await UsersSeeds.execute();
+  await PrivateConversationsSeeds.execute();
+  await GroupsSeeds.execute();
+  await GroupMembersSeeds.execute();
+  await MessagesSeeds.execute();
   // await PrivateConversationMembersSeeds.execute();
-  // await MessagesSeeds.execute();
   // await TasksSeeds.execute();
   // await TaskAssigneesSeeds.execute();
   // await ContentsSeeds.execute();

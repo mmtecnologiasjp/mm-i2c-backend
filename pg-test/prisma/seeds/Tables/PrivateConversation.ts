@@ -3,12 +3,12 @@ const prisma = new PrismaClient();
 
 export class PrivateConversationsSeeds {
   static async execute() {
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 4; i++) {
       const privateConversation = await prisma.privateConversations.create({
         data: {
           uuid: `0${i + 1}`,
-          created_at: new Date(),
-          updated_at: new Date(),
+          from_uuid: `0${i + 1}`,
+          to_uuid: `0${i + 2}`,
         },
       });
       console.log(
