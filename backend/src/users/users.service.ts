@@ -6,22 +6,29 @@ import prisma from '../client';
 @Injectable()
 export class UsersService {
   create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+    return prisma.users.create({
+      data: createUserDto,
+    });
   }
 
   findAll() {
     return prisma.users.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  findOne(uuid: string) {
+    return prisma.users.findUnique({ where: { uuid } });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  update(uuid: string, updateUserDto: UpdateUserDto) {
+    return prisma.users.update({ where: { uuid }, data: updateUserDto });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  softDelete(uuid: string) {
+    return prisma.users.update({
+      where: { uuid },
+      data: {
+        deleted_at: new Date(),
+      },
+    });
   }
 }
