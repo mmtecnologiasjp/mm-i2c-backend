@@ -6,6 +6,10 @@ import {
   createUserInput,
   updateUserInput,
 } from './mock/user.service.mock';
+import { ConflictException, NotFoundException } from '@nestjs/common';
+import { PrismaError } from 'prisma-error-enum';
+
+jest.useFakeTimers().setSystemTime(new Date('2023-01-01'));
 
 describe('UsersSerice', () => {
   let service: UsersService;
@@ -22,45 +26,92 @@ describe('UsersSerice', () => {
     expect(service).toBeDefined();
   });
 
-  it('should list all users', async () => {
-    prismaMock.users.findMany.mockResolvedValue([user, user]);
-    const users = await service.findAll();
-    expect(users).toBeInstanceOf(Array);
-  });
-
-  it('should find a user by uuid', async () => {
-    prismaMock.users.findUnique.mockResolvedValue(user);
-    const userFound = service.findOne(user.uuid);
-    expect(userFound).toBeInstanceOf(Object);
-  });
-
-  it('should create a user', async () => {
-    prismaMock.users.create.mockResolvedValue(user);
-    const userCreated = service.create(createUserInput);
-    expect(userCreated).toBeInstanceOf(Object);
-  });
-
-  it('should update a user', async () => {
-    prismaMock.users.update.mockResolvedValue(user);
-    await service.update(user.uuid, updateUserInput);
-
-    expect(prismaMock.users.update).toBeCalledWith({
-      where: { uuid: user.uuid },
-      data: updateUserInput,
+  describe('findAll', () => {
+    it('should list all users', async () => {
+      prismaMock.users.findMany.mockResolvedValue([user, user]);
+      const users = await service.findAll();
+      expect(users).toBeInstanceOf(Array);
     });
-    expect(prismaMock.users.update).toBeCalledTimes(1);
   });
 
-  it('should soft delete a user', async () => {
-    prismaMock.users.update.mockResolvedValue(user);
-    await service.softDelete(user.uuid);
-
-    expect(prismaMock.users.update).toBeCalledWith({
-      where: { uuid: user.uuid },
-      data: {
-        deleted_at: new Date(),
-      },
+  describe('findOne', () => {
+    it('should find a user by uuid', async () => {
+      prismaMock.users.findUnique.mockResolvedValue(user);
+      const userFound = await service.findOne(user.uuid);
+      expect(userFound).toBeInstanceOf(Object);
     });
-    expect(prismaMock.users.update).toBeCalledTimes(1);
+
+    it('should return a comprehensive error if user not found', async () => {
+      prismaMock.users.findUnique.mockResolvedValue(null);
+      const userNotFoundPromise = service.findOne(user.uuid);
+      await Promise.all([
+        expect(userNotFoundPromise).rejects.toThrowError(NotFoundException),
+        expect(userNotFoundPromise).rejects.not.toThrowError(ConflictException),
+      ]);
+    });
+  });
+
+  describe('create', () => {
+    it('should create a user', async () => {
+      prismaMock.users.create.mockResolvedValue(user);
+      const userCreated = service.create(createUserInput);
+      expect(userCreated).toBeInstanceOf(Object);
+    });
+
+    it('should return a comprehensive error if user already exists', async () => {
+      prismaMock.users.create.mockRejectedValue({
+        code: PrismaError.UniqueConstraintViolation,
+        meta: { target: ['email'] },
+      });
+
+      await expect(service.create(createUserInput)).rejects.toThrowError(
+        ConflictException,
+      );
+    });
+  });
+
+  describe('update', () => {
+    it('should update a user', async () => {
+      prismaMock.users.findUnique.mockResolvedValue(user);
+      await service.update(user.uuid, updateUserInput);
+      expect(prismaMock.users.update).toBeCalledWith({
+        where: { uuid: user.uuid },
+        data: updateUserInput,
+      });
+      expect(prismaMock.users.update).toBeCalledTimes(1);
+    });
+
+    it('should return a comprehensive error if user not found', async () => {
+      prismaMock.users.findUnique.mockResolvedValue(null);
+      const userNotFoundPromise = service.update(user.uuid, updateUserInput);
+      await Promise.all([
+        expect(userNotFoundPromise).rejects.toThrowError(NotFoundException),
+        expect(userNotFoundPromise).rejects.not.toThrowError(ConflictException),
+      ]);
+    });
+  });
+
+  describe('delete', () => {
+    it('should soft delete a user', async () => {
+      prismaMock.users.findUnique.mockResolvedValue(user);
+      await service.softDelete(user.uuid);
+
+      expect(prismaMock.users.update).toBeCalledWith({
+        where: { uuid: user.uuid },
+        data: {
+          deleted_at: new Date(),
+        },
+      });
+      expect(prismaMock.users.update).toBeCalledTimes(1);
+    });
+
+    it('should return a comprehensive error if user not found', async () => {
+      prismaMock.users.findUnique.mockResolvedValue(null);
+      const userNotFoundPromise = service.softDelete(user.uuid);
+      await Promise.all([
+        expect(userNotFoundPromise).rejects.toThrowError(NotFoundException),
+        expect(userNotFoundPromise).rejects.not.toThrowError(ConflictException),
+      ]);
+    });
   });
 });

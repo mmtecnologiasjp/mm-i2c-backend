@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 export class GroupsSeeds {
   static async execute() {
     for (let i = 0; i < 2; i++) {
-      const group = await prisma.group.create({
+      const group = await prisma.groups.create({
         data: {
           uuid: `0${i + 1}`,
           name: faker.company.name(),

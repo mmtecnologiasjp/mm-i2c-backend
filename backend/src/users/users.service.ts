@@ -1,34 +1,69 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import prisma from '../client';
+import { PrismaError } from 'prisma-error-enum';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
-    return prisma.users.create({
-      data: createUserDto,
-    });
+  async create(createUserDto: CreateUserDto) {
+    try {
+      const userCreated = await prisma.users.create({
+        data: createUserDto,
+      });
+
+      return userCreated;
+    } catch (error) {
+      const prismaError = error as Prisma.PrismaClientKnownRequestError;
+
+      if (prismaError.code === PrismaError.UniqueConstraintViolation) {
+        throw new ConflictException('Email already exists');
+      }
+    }
   }
 
   findAll() {
     return prisma.users.findMany();
   }
 
-  findOne(uuid: string) {
-    return prisma.users.findUnique({ where: { uuid } });
+  async findOne(uuid: string) {
+    const user = await this._getUser(uuid);
+
+    if (!user) throw new NotFoundException();
+
+    return user;
   }
 
-  update(uuid: string, updateUserDto: UpdateUserDto) {
-    return prisma.users.update({ where: { uuid }, data: updateUserDto });
-  }
+  async update(uuid: string, updateUserDto: UpdateUserDto) {
+    const user = await this._getUser(uuid);
 
-  softDelete(uuid: string) {
+    if (!user) throw new NotFoundException();
+
     return prisma.users.update({
+      where: { uuid: user.uuid },
+      data: updateUserDto,
+    });
+  }
+
+  async softDelete(uuid: string) {
+    const user = await this._getUser(uuid);
+
+    if (!user) throw new NotFoundException();
+
+    return prisma.users.update({
+      where: { uuid: user.uuid },
+      data: { deleted_at: new Date() },
+    });
+  }
+
+  private _getUser(uuid: string) {
+    return prisma.users.findUnique({
       where: { uuid },
-      data: {
-        deleted_at: new Date(),
-      },
     });
   }
 }
