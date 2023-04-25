@@ -1,14 +1,10 @@
 import { faker } from '@faker-js/faker';
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
-
-//sql query to find all messages from a group
-// SELECT * FROM messages WHERE group_uuid = '01';
-
 export class MessagesSeeds {
   static async execute() {
     for (let i = 0; i < 2; i++) {
-      const message = await prisma.messages.create({
+      const message = await prisma.message.create({
         data: {
           content: faker.lorem.paragraph(12),
           type: 'text',
@@ -20,7 +16,7 @@ export class MessagesSeeds {
     }
 
     for (let i = 0; i < 5; i++) {
-      const privateMessage = await prisma.messages.create({
+      const privateMessage = await prisma.message.create({
         data: {
           content: faker.lorem.paragraph(12),
           group_uuid: '01',

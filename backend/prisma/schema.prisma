@@ -24,15 +24,15 @@ model User {
   deleted_at DateTime?
 
   groups                     Group[]
-  group_member               GroupMembers[]
-  assignee_to                TasksAssignees[]
-  messages_metadata          MessagesMetadata[]
-  contents_sent              Contents[]
-  contents_received          Contents[]             @relation("ContentsReceived")
-  private_conversations_from PrivateConversations[]
-  private_conversations_to   PrivateConversations[] @relation("PrivateConversationsTo")
-  sent_messages              Messages[]
-  sent_tasks                 Tasks[]
+  group_member               GroupMember[]
+  assignee_to                TasksAssignee[]
+  messages_metadata          MessageMetadata[]
+  contents_sent              Content[]
+  contents_received          Content[]             @relation("ContentsReceived")
+  private_conversations_from PrivateConversation[]
+  private_conversations_to   PrivateConversation[] @relation("PrivateConversationsTo")
+  sent_messages              Message[]
+  sent_tasks                 Task[]
 
   @@map("users")
 }
@@ -50,15 +50,15 @@ model Group {
   updated_at DateTime  @updatedAt
   deleted_at DateTime?
 
-  members  GroupMembers[]
-  tasks    Tasks[]
-  contents Contents[]
-  messages Messages[]
+  members  GroupMember[]
+  tasks    Task[]
+  contents Content[]
+  messages Message[]
 
   @@map("groups")
 }
 
-model GroupMembers {
+model GroupMember {
   uuid      String @id @default(uuid())
   user      User   @relation(fields: [user_uuid], references: [uuid])
   user_uuid String @default(uuid())
@@ -69,7 +69,7 @@ model GroupMembers {
   @@map("group_members")
 }
 
-model PrivateConversations {
+model PrivateConversation {
   uuid String @id @default(uuid())
 
   from      User   @relation(fields: [from_uuid], references: [uuid])
@@ -82,20 +82,20 @@ model PrivateConversations {
   updated_at DateTime  @updatedAt
   deleted_at DateTime?
 
-  messages Messages[]
-  tasks    Tasks[]
+  messages Message[]
+  tasks    Task[]
 
   @@map("private_conversations")
 }
 
-model Messages {
+model Message {
   uuid    String @id @default(uuid())
   content String
 
   group      Group?  @relation(fields: [group_uuid], references: [uuid])
   group_uuid String?
 
-  private_conversation      PrivateConversations? @relation(fields: [private_conversation_uuid], references: [uuid])
+  private_conversation      PrivateConversation? @relation(fields: [private_conversation_uuid], references: [uuid])
   private_conversation_uuid String?
 
   sender      User   @relation(fields: [sender_uuid], references: [uuid])
@@ -106,17 +106,17 @@ model Messages {
   created_at        DateTime           @default(now())
   updated_at        DateTime           @updatedAt
   deleted_at        DateTime?
-  messages_metadata MessagesMetadata[]
+  messages_metadata MessageMetadata[]
 
   @@map("messages")
 }
 
-model MessagesMetadata {
+model MessageMetadata {
   uuid  String @id @default(uuid())
   key   String
   value String
 
-  message      Messages @relation(fields: [message_uuid], references: [uuid])
+  message      Message @relation(fields: [message_uuid], references: [uuid])
   message_uuid String
 
   user      User   @relation(fields: [user_uuid], references: [uuid])
@@ -129,7 +129,7 @@ model MessagesMetadata {
   @@map("messages_metadata")
 }
 
-model StorageFiles {
+model StorageFile {
   uuid       String @id @default(uuid())
   filename   String
   path       String
@@ -139,17 +139,17 @@ model StorageFiles {
   created_at           DateTime               @default(now())
   updated_at           DateTime               @updatedAt
   deleted_at           DateTime?
-  StorageFilesMetadata StorageFilesMetadata[]
+  StorageFilesMetadata StorageFileMetadata[]
 
   @@map("storage_files")
 }
 
-model StorageFilesMetadata {
+model StorageFileMetadata {
   uuid  String @id @default(uuid())
   key   String
   value String
 
-  file      StorageFiles @relation(fields: [file_uuid], references: [uuid])
+  file      StorageFile @relation(fields: [file_uuid], references: [uuid])
   file_uuid String
 
   created_at DateTime  @default(now())
@@ -159,7 +159,7 @@ model StorageFilesMetadata {
   @@map("storage_files_metadata")
 }
 
-model Tasks {
+model Task {
   uuid        String       @id @default(uuid())
   title       String
   description String
@@ -174,21 +174,21 @@ model Tasks {
   group      Group?  @relation(fields: [group_uuid], references: [uuid])
   group_uuid String?
 
-  private_conversation      PrivateConversations? @relation(fields: [private_conversation_uuid], references: [uuid])
+  private_conversation      PrivateConversation? @relation(fields: [private_conversation_uuid], references: [uuid])
   private_conversation_uuid String?
 
   sender      User   @relation(fields: [sender_uuid], references: [uuid])
   sender_uuid String
 
-  task_assignees TasksAssignees[]
+  task_assignees TasksAssignee[]
 
   @@map("tasks")
 }
 
-model TasksAssignees {
+model TasksAssignee {
   uuid String @id @default(uuid())
 
-  task      Tasks  @relation(fields: [task_uuid], references: [uuid])
+  task      Task  @relation(fields: [task_uuid], references: [uuid])
   task_uuid String
 
   user      User   @relation(fields: [user_uuid], references: [uuid])
@@ -197,7 +197,7 @@ model TasksAssignees {
   @@map("tasks_assignees")
 }
 
-model Contents {
+model Content {
   uuid    String          @id @default(uuid())
   content String
   title   String?
