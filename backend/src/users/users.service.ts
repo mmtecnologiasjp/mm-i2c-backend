@@ -13,7 +13,7 @@ import { Prisma } from '@prisma/client';
 export class UsersService {
   async create(createUserDto: CreateUserDto) {
     try {
-      const userCreated = await prisma.users.create({
+      const userCreated = await prisma.user.create({
         data: createUserDto,
       });
 
@@ -28,7 +28,7 @@ export class UsersService {
   }
 
   findAll() {
-    return prisma.users.findMany();
+    return prisma.user.findMany();
   }
 
   async findOne(uuid: string) {
@@ -44,7 +44,7 @@ export class UsersService {
 
     if (!user) throw new NotFoundException();
 
-    return prisma.users.update({
+    return prisma.user.update({
       where: { uuid: user.uuid },
       data: updateUserDto,
     });
@@ -55,14 +55,14 @@ export class UsersService {
 
     if (!user) throw new NotFoundException();
 
-    return prisma.users.update({
+    return prisma.user.update({
       where: { uuid: user.uuid },
       data: { deleted_at: new Date() },
     });
   }
 
   private _getUser(uuid: string) {
-    return prisma.users.findUnique({
+    return prisma.user.findUnique({
       where: { uuid },
     });
   }

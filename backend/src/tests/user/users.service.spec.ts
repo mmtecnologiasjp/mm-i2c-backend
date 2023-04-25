@@ -28,7 +28,7 @@ describe('UsersSerice', () => {
 
   describe('findAll', () => {
     it('should list all users', async () => {
-      prismaMock.users.findMany.mockResolvedValue([user, user]);
+      prismaMock.user.findMany.mockResolvedValue([user, user]);
       const users = await service.findAll();
       expect(users).toBeInstanceOf(Array);
     });
@@ -36,13 +36,13 @@ describe('UsersSerice', () => {
 
   describe('findOne', () => {
     it('should find a user by uuid', async () => {
-      prismaMock.users.findUnique.mockResolvedValue(user);
+      prismaMock.user.findUnique.mockResolvedValue(user);
       const userFound = await service.findOne(user.uuid);
       expect(userFound).toBeInstanceOf(Object);
     });
 
     it('should return a comprehensive error if user not found', async () => {
-      prismaMock.users.findUnique.mockResolvedValue(null);
+      prismaMock.user.findUnique.mockResolvedValue(null);
       const userNotFoundPromise = service.findOne(user.uuid);
       await Promise.all([
         expect(userNotFoundPromise).rejects.toThrowError(NotFoundException),
@@ -53,13 +53,13 @@ describe('UsersSerice', () => {
 
   describe('create', () => {
     it('should create a user', async () => {
-      prismaMock.users.create.mockResolvedValue(user);
+      prismaMock.user.create.mockResolvedValue(user);
       const userCreated = service.create(createUserInput);
       expect(userCreated).toBeInstanceOf(Object);
     });
 
     it('should return a comprehensive error if user already exists', async () => {
-      prismaMock.users.create.mockRejectedValue({
+      prismaMock.user.create.mockRejectedValue({
         code: PrismaError.UniqueConstraintViolation,
         meta: { target: ['email'] },
       });
@@ -72,17 +72,17 @@ describe('UsersSerice', () => {
 
   describe('update', () => {
     it('should update a user', async () => {
-      prismaMock.users.findUnique.mockResolvedValue(user);
+      prismaMock.user.findUnique.mockResolvedValue(user);
       await service.update(user.uuid, updateUserInput);
-      expect(prismaMock.users.update).toBeCalledWith({
+      expect(prismaMock.user.update).toBeCalledWith({
         where: { uuid: user.uuid },
         data: updateUserInput,
       });
-      expect(prismaMock.users.update).toBeCalledTimes(1);
+      expect(prismaMock.user.update).toBeCalledTimes(1);
     });
 
     it('should return a comprehensive error if user not found', async () => {
-      prismaMock.users.findUnique.mockResolvedValue(null);
+      prismaMock.user.findUnique.mockResolvedValue(null);
       const userNotFoundPromise = service.update(user.uuid, updateUserInput);
       await Promise.all([
         expect(userNotFoundPromise).rejects.toThrowError(NotFoundException),
@@ -93,20 +93,20 @@ describe('UsersSerice', () => {
 
   describe('delete', () => {
     it('should soft delete a user', async () => {
-      prismaMock.users.findUnique.mockResolvedValue(user);
+      prismaMock.user.findUnique.mockResolvedValue(user);
       await service.softDelete(user.uuid);
 
-      expect(prismaMock.users.update).toBeCalledWith({
+      expect(prismaMock.user.update).toBeCalledWith({
         where: { uuid: user.uuid },
         data: {
           deleted_at: new Date(),
         },
       });
-      expect(prismaMock.users.update).toBeCalledTimes(1);
+      expect(prismaMock.user.update).toBeCalledTimes(1);
     });
 
     it('should return a comprehensive error if user not found', async () => {
-      prismaMock.users.findUnique.mockResolvedValue(null);
+      prismaMock.user.findUnique.mockResolvedValue(null);
       const userNotFoundPromise = service.softDelete(user.uuid);
       await Promise.all([
         expect(userNotFoundPromise).rejects.toThrowError(NotFoundException),
