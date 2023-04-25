@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 export class UsersSeeds {
   static async execute() {
     for (let i = 0; i < 10; i++) {
-      const user = await prisma.users.create({
+      const user = await prisma.user.create({
         data: {
           uuid: `0${i + 1}`,
           first_name: faker.name.firstName(),
