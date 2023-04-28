@@ -1,9 +1,9 @@
-import { StatusEnum, Users } from '@prisma/client';
+import { StatusEnum, User } from '@prisma/client';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UpdateUserDto } from 'src/users/dto/update-user.dto';
 import { v4 as uuidv4 } from 'uuid';
 
-export const user: Users = {
+export const user: User = {
   uuid: uuidv4(),
   first_name: 'John',
   last_name: 'Doe',
