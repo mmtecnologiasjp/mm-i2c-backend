@@ -1,17 +1,41 @@
-version: '3.7'
+version: '3.8'
 services:
-  db:
-    image: postgres
-    container_name: docker_db
+  mmchat_nestjs:
+    build:
+      context: ./
+      dockerfile: ./.docker/Dockerfile
+    container_name: mmchat_nestjs
     restart: always
-    ports:
-      - "5432:5432"
+    entrypoint: ./.docker/entrypoint.sh
     environment:
-      POSTGRES_USER: "docker"
-      POSTGRES_PASSWORD: "docker"
-      POSTGRES_DB: "docker_db"
+      POSTGRES_HOST: mmchat_db
+    networks:
+      - mmchat-network
     volumes:
-      - docker_v:/var/lib/postgresql/data
+      - .:/home/node/app
+    depends_on:
+      - mmchat_db
+    ports:
+      - ${PORT}:${PORT}
 
+  mmchat_db:
+    image: postgres:13.3-alpine
+    container_name: mmchat_db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    volumes:
+      - mmchat-data:/var/lib/postgresql/data
+    networks:
+      - mmchat-network
+      
 volumes:
-  docker_v:
+  mmchat-data:
+
+networks:
+  mmchat-network:

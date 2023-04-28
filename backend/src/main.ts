@@ -12,6 +12,9 @@ async function bootstrap() {
       transform: true,
     }),
   );
-  await app.listen(4000);
+  const PORT = process.env.PORT ?? 2000;
+  await app.listen(PORT, () =>
+    console.log(`[MM CHAT] RUNNING ON PORT ${PORT}`),
+  );
 }
 bootstrap();

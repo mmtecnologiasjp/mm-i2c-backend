@@ -42,6 +42,7 @@ export class UsersService {
   async update(uuid: string, updateUserDto: UpdateUserDto) {
     const user = await this._getUser(uuid);
 
+    console.log(user);
     if (!user) throw new NotFoundException();
 
     return prisma.user.update({
