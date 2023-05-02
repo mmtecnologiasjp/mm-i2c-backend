@@ -1,10 +1,10 @@
 import { StatusEnum, User } from '@prisma/client';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UpdateUserDto } from 'src/users/dto/update-user.dto';
-import { v4 as uuidv4 } from 'uuid';
+import { generateUUID } from 'src/utils/uuid/generateUUID';
 
 export const user: User = {
-  uuid: uuidv4(),
+  uuid: generateUUID(),
   first_name: 'John',
   last_name: 'Doe',
   email: '',
@@ -18,7 +18,7 @@ export const user: User = {
 };
 
 export const createUserInput: CreateUserDto = {
-  uuid: uuidv4(),
+  uuid: generateUUID(),
   first_name: 'John',
   last_name: 'Doe',
   email: '',
