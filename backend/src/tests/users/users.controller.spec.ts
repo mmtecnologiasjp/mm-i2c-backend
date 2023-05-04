@@ -1,7 +1,9 @@
+import { prismaMock } from '../prisma-mock';
 import { Test } from '@nestjs/testing';
 import { UsersController } from 'src/users/users.controller';
 import { UsersService } from 'src/users/users.service';
-import { createUserInput } from './mock/user.service.mock';
+import { createUserInput, user } from './mock/user.service.mock';
+import { groupMemberMock } from '../group-members/mock/grou-members.mock';
 
 describe('UserController', () => {
   let controller: UsersController;
@@ -22,6 +24,7 @@ describe('UserController', () => {
   });
 
   it('should call the service with the correct parameters', async () => {
+    prismaMock.groupMember.create.mockResolvedValue(groupMemberMock);
     const spy = jest.spyOn(controller, 'create');
     controller.create(createUserInput);
     expect(spy).toHaveBeenCalledWith(createUserInput);
