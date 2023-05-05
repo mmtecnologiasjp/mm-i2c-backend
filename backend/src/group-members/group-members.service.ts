@@ -41,14 +41,18 @@ export class GroupMembersService {
   }
 
   async update(uuid: string, updateGroupMemberDto: UpdateGroupMemberDto) {
-    const userUpdated = prisma.groupMember.update({
-      data: updateGroupMemberDto,
+    const groupMember = await prisma.groupMember.findUnique({
       where: { uuid },
     });
 
-    if (!userUpdated) {
+    if (!groupMember) {
       throw new NotFoundException(`Group member with uuid ${uuid} not found`);
     }
+
+    const userUpdated = await prisma.groupMember.update({
+      data: updateGroupMemberDto,
+      where: { uuid },
+    });
 
     return userUpdated;
   }

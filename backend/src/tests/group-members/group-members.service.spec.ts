@@ -77,6 +77,7 @@ describe('GroupMembers service', () => {
       };
 
       const newRole: RoleEnum = 'Admin';
+      prismaMock.groupMember.findUnique.mockResolvedValue(secondGroupMember);
       prismaMock.groupMember.update.mockResolvedValue(secondGroupMember);
 
       const groupMemberUpdated = await service.update(secondGroupMember.uuid, {
