@@ -7,7 +7,7 @@ import {
   groupMemberUserMock,
 } from './mock/grou-members.mock';
 import { NotFoundException } from '@nestjs/common';
-import { RoleEnum, prisma } from '@prisma/client';
+import { RoleEnum } from '@prisma/client';
 
 jest.useFakeTimers().setSystemTime(new Date('2023-01-01'));
 
