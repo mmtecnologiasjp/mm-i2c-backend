@@ -4,11 +4,10 @@ import { GroupMembersService } from 'src/group-members/group-members.service';
 import {
   groupMemberGroupMock,
   groupMemberMock,
+  groupMemberUserMock,
 } from './mock/grou-members.mock';
-import { ConflictException, NotFoundException } from '@nestjs/common';
-import { RoleEnum } from '@prisma/client';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
-import { PrismaError } from 'prisma-error-enum';
+import { NotFoundException } from '@nestjs/common';
+import { RoleEnum, prisma } from '@prisma/client';
 
 jest.useFakeTimers().setSystemTime(new Date('2023-01-01'));
 
@@ -29,6 +28,8 @@ describe('GroupMembers service', () => {
 
   describe('create', () => {
     it('should create a group member', async () => {
+      prismaMock.group.findUnique.mockResolvedValue(groupMemberGroupMock);
+      prismaMock.user.findUnique.mockResolvedValue(groupMemberUserMock);
       prismaMock.groupMember.create.mockResolvedValue(groupMemberMock);
 
       const groupMember = await service.create(groupMemberMock);
@@ -37,17 +38,13 @@ describe('GroupMembers service', () => {
     });
 
     it('should return a comprehensive error if group or user not found', async () => {
-      prismaMock.groupMember.create.mockRejectedValue(
-        new PrismaClientKnownRequestError(
-          'Unique constraint violation',
-          PrismaError.UniqueConstraintViolation,
-          '1',
-        ),
+      prismaMock.group.findUnique.mockResolvedValue(null);
+      prismaMock.user.findUnique.mockResolvedValue(null);
+      const groupOrUserNotFoundPromise = service.create(groupMemberMock);
+
+      expect(groupOrUserNotFoundPromise).rejects.toThrowError(
+        NotFoundException,
       );
-
-      const groupNotFoundPromise = service.create(groupMemberMock);
-
-      expect(groupNotFoundPromise).rejects.toThrowError(ConflictException);
     });
   });
 
