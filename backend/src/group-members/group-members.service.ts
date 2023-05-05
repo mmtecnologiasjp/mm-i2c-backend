@@ -1,12 +1,28 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateGroupMemberDto } from './dto/create-group-member.dto';
 import { UpdateGroupMemberDto } from './dto/update-group-member.dto';
 import prisma from 'src/client';
+import { tryCatch } from 'src/utils/tryCatch';
+import { Prisma } from '@prisma/client';
+import { PrismaError } from 'prisma-error-enum';
 
 @Injectable()
 export class GroupMembersService {
-  create(createGroupMemberDto: CreateGroupMemberDto) {
-    return prisma.groupMember.create({ data: createGroupMemberDto });
+  async create(createGroupMemberDto: CreateGroupMemberDto) {
+    const createGroupMemberPromise = prisma.groupMember.create({
+      data: createGroupMemberDto,
+    });
+
+    const [data, error] = await tryCatch(createGroupMemberPromise);
+
+    this._handleError(error);
+
+    return data;
   }
 
   findOne(uuid: string) {
@@ -44,5 +60,19 @@ export class GroupMembersService {
 
   findGroupMembersByGroupUUID(uuid: string) {
     return prisma.groupMember.findMany({ where: { group_uuid: uuid } });
+  }
+
+  private _handleError(
+    error: Error | Prisma.PrismaClientKnownRequestError | null,
+  ) {
+    const isPrismaError = error instanceof Prisma.PrismaClientKnownRequestError;
+
+    if (!isPrismaError && error !== null) {
+      throw new InternalServerErrorException('Something went wrong');
+    }
+
+    if (error?.code === PrismaError.UniqueConstraintViolation) {
+      throw new ConflictException('Group already exists');
+    }
   }
 }
