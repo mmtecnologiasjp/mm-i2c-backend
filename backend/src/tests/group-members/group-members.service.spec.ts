@@ -36,16 +36,6 @@ describe('GroupMembers service', () => {
 
       expect(groupMember).toEqual(groupMemberMock);
     });
-
-    it('should return a comprehensive error if group or user not found', async () => {
-      prismaMock.group.findUnique.mockResolvedValue(null);
-      prismaMock.user.findUnique.mockResolvedValue(null);
-      const groupOrUserNotFoundPromise = service.create(groupMemberMock);
-
-      expect(groupOrUserNotFoundPromise).rejects.toThrowError(
-        NotFoundException,
-      );
-    });
   });
 
   describe('findAllGroupMembersByGroupUUID', () => {

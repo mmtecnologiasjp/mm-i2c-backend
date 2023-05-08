@@ -1,6 +1,6 @@
 import { Group, GroupMember, User } from '@prisma/client';
-import { group } from 'src/tests/groups/mock/groups.service.mock';
 import { user } from 'src/tests/users/mock/user.service.mock';
+import { group } from '../../groups/mock/groups.service.mock';
 
 const groupMemberUserMock: User = { ...user, uuid: '01' };
 

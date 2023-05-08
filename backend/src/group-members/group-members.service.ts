@@ -14,17 +14,6 @@ import { PrismaError } from 'prisma-error-enum';
 @Injectable()
 export class GroupMembersService {
   async create(createGroupMemberDto: CreateGroupMemberDto) {
-    const groupPromise = prisma.group.findUnique({
-      where: { uuid: createGroupMemberDto.group_uuid },
-    });
-    const userPromise = prisma.user.findUnique({
-      where: { uuid: createGroupMemberDto.user_uuid },
-    });
-
-    const [group, user] = await Promise.all([groupPromise, userPromise]);
-
-    if (!group || !user) throw new NotFoundException('Group or user not found');
-
     const createGroupMemberPromise = prisma.groupMember.create({
       data: createGroupMemberDto,
     });
