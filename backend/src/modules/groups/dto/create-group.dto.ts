@@ -1,6 +1,9 @@
 import { IsNotEmpty, IsString, Validate } from 'class-validator';
-import { ValidationConstraints, FieldExists } from 'src/validators/FieldExists';
 import { ApiProperty } from '@nestjs/swagger';
+import {
+  FieldExists,
+  ValidationConstraints,
+} from 'src/shared/utils/class-validator/validators/FieldExists';
 
 export class CreateGroupDto {
   @IsString()

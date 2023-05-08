@@ -1,6 +1,5 @@
 import { prismaMock } from '../prisma-mock';
 import { Test } from '@nestjs/testing';
-import { GroupsService } from 'src/groups/groups.service';
 import { createGroupInput, group } from './mock/groups.service.mock';
 import { PrismaError } from 'prisma-error-enum';
 import {
@@ -8,6 +7,7 @@ import {
   PrismaClientKnownRequestError,
 } from '@prisma/client/runtime';
 import { ConflictException } from '@nestjs/common';
+import { GroupsService } from 'src/modules/groups/groups.service';
 
 jest.useFakeTimers().setSystemTime(new Date('2023-01-01'));
 

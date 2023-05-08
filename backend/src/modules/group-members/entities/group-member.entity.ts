@@ -4,7 +4,7 @@ import {
   ApiPropertyEnum,
   ApiPropertyTimestamp,
   ApiPropertyUUID,
-} from 'src/utils/swagger/dto-decorators';
+} from 'src/shared/utils/swagger/dto-decorators';
 
 export class GroupMember implements PrismaGroupMember {
   @ApiPropertyUUID()

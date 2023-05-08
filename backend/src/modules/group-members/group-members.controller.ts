@@ -8,7 +8,7 @@ import {
   ApiGetOne,
   ApiSoftDelete,
   ApiUpdate,
-} from 'src/utils/swagger/decorators';
+} from 'src/shared/utils/swagger/decorators';
 import { GroupMember } from './entities/group-member.entity';
 import { SoftDeletedGroupMember } from './swagger/group-members.custom-schemas';
 

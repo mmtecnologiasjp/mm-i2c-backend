@@ -1,3 +1,4 @@
+import prisma from 'src/client';
 import {
   ConflictException,
   Injectable,
@@ -5,8 +6,7 @@ import {
 } from '@nestjs/common';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
-import prisma from '../client';
-import { tryCatch } from 'src/utils/tryCatch';
+import { tryCatch } from 'src/shared/utils/tryCatch';
 import { Prisma } from '@prisma/client';
 import { PrismaError } from 'prisma-error-enum';
 import { NotFoundError } from '@prisma/client/runtime';

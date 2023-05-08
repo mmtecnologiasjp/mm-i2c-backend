@@ -9,7 +9,7 @@ import {
   ApiGetOne,
   ApiSoftDelete,
   ApiUpdate,
-} from 'src/utils/swagger/decorators';
+} from 'src/shared/utils/swagger/decorators';
 import { User } from './entities/user.entity';
 import { SoftDeletedUser } from './swagger/users.custom-schemas';
 @ApiEndpoints({ tag: 'Users', shemas: [User, SoftDeletedUser] })

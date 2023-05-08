@@ -10,7 +10,7 @@ import {
   ApiGetOne,
   ApiSoftDelete,
   ApiUpdate,
-} from 'src/utils/swagger/decorators';
+} from 'src/shared/utils/swagger/decorators';
 import { SoftDeletedGroup } from './swagger/groups.custom-schemas';
 
 @ApiEndpoints({ tag: 'Groups', shemas: [Group, SoftDeletedGroup] })

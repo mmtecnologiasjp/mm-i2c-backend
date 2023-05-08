@@ -1,5 +1,5 @@
 import { prismaMock } from '../prisma-mock';
-import { FieldExists } from 'src/validators/FieldExists';
+import { FieldExists } from 'src/shared/utils/class-validator/validators/FieldExists';
 
 describe('FieldExists', () => {
   let fieldExists: FieldExists;
