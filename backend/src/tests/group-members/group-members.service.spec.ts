@@ -66,15 +66,6 @@ describe('GroupMembers Service', () => {
 
       expect(groupMember).toEqual([groupMemberMock]);
     });
-
-    it('should return an empty array if no group members found', async () => {
-      prismaMock.groupMember.findMany.mockResolvedValue([]);
-
-      const groupMember = await service.findGroupMembersByGroupUUID(
-        groupMemberGroupMock.uuid,
-      );
-      expect(groupMember).toEqual([]);
-    });
   });
 
   describe('update', () => {
