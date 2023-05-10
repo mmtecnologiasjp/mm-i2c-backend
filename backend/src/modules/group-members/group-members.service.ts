@@ -14,6 +14,20 @@ import { PrismaError } from 'prisma-error-enum';
 @Injectable()
 export class GroupMembersService {
   async create(createGroupMemberDto: CreateGroupMemberDto) {
+    const groupMember = await prisma.groupMember.findFirst({
+      where: {
+        group_uuid: createGroupMemberDto.group_uuid,
+        user_uuid: createGroupMemberDto.user_uuid,
+      },
+      select: {
+        uuid: true,
+      },
+    });
+
+    if (groupMember) {
+      throw new ConflictException(`This user already exists in this group`);
+    }
+
     const createGroupMemberPromise = prisma.groupMember.create({
       data: createGroupMemberDto,
     });

@@ -2,11 +2,14 @@ import prisma from 'src/client';
 import {
   ConflictException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { tryCatch } from 'src/shared/utils/tryCatch';
+import { Prisma } from '@prisma/client';
+import { PrismaError } from 'prisma-error-enum';
 
 @Injectable()
 export class UsersService {
@@ -19,7 +22,9 @@ export class UsersService {
 
     const userCreatedPromise = prisma.user.create({ data: createUserDto });
 
-    const [data] = await tryCatch(userCreatedPromise);
+    const [data, error] = await tryCatch(userCreatedPromise);
+
+    this._handleError(error);
 
     return data;
   }
@@ -69,5 +74,19 @@ export class UsersService {
       where: { email },
       select: { email: true },
     });
+  }
+
+  private _handleError(
+    error: Error | Prisma.PrismaClientKnownRequestError | null,
+  ) {
+    const isPrismaError = error instanceof Prisma.PrismaClientKnownRequestError;
+
+    if (!isPrismaError && error !== null) {
+      throw new InternalServerErrorException('Something went wrong');
+    }
+
+    if (error?.code === PrismaError.UniqueConstraintViolation) {
+      throw new ConflictException('Unique constraint violation');
+    }
   }
 }
