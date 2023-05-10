@@ -4,14 +4,14 @@ import {
   user,
   createUserInput,
   updateUserInput,
-} from './mock/user.service.mock';
+} from './mock/users.service.mock';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { PrismaError } from 'prisma-error-enum';
 import { UsersService } from 'src/modules/users/users.service';
 
 jest.useFakeTimers().setSystemTime(new Date('2023-01-01'));
 
-describe('UsersSerice', () => {
+describe('Users Serice', () => {
   let service: UsersService;
 
   beforeEach(async () => {

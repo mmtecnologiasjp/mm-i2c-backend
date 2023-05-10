@@ -1,39 +1,47 @@
-import { faker } from '@faker-js/faker';
-import { ApiProperty } from '@nestjs/swagger';
 import { User as PrismaUser, StatusEnum } from '@prisma/client';
-import { generateUUID } from 'src/shared/utils/uuid/generateUUID';
+import {
+  ApiPropertyDeletedAt,
+  ApiPropertyEmail,
+  ApiPropertyEnum,
+  ApiPropertyImageURL,
+  ApiPropertyLastName,
+  ApiPropertyRequiredFirstName,
+  ApiPropertyRequiredString,
+  ApiPropertyTimestamp,
+  ApiPropertyUUID,
+} from 'src/shared/utils/swagger/properties-decorators';
 
 export class User implements PrismaUser {
-  @ApiProperty({ default: generateUUID() })
+  @ApiPropertyUUID()
   uuid: string;
 
-  @ApiProperty({ default: faker.name.firstName() })
+  @ApiPropertyRequiredFirstName()
   first_name: string;
 
-  @ApiProperty({ default: faker.name.lastName() })
+  @ApiPropertyLastName()
   last_name: string | null;
 
-  @ApiProperty({ default: faker.internet.userName() })
+  @ApiPropertyRequiredString()
   username: string;
 
-  @ApiProperty({ default: faker.internet.email() })
+  @ApiPropertyEmail()
   email: string;
 
-  @ApiProperty({ enum: StatusEnum, default: StatusEnum.Active })
+  @ApiPropertyEnum({ Default: StatusEnum.Active, Enum: StatusEnum })
   status: StatusEnum;
 
-  @ApiProperty({ default: faker.internet.password() })
+  @ApiPropertyRequiredString()
   password: string;
 
-  @ApiProperty({ default: faker.image.imageUrl() })
+  @ApiPropertyImageURL()
   avatar_url: string | null;
 
-  @ApiProperty({ default: new Date() })
+  @ApiPropertyTimestamp()
   created_at: Date;
 
-  @ApiProperty({ default: new Date() })
+  @ApiPropertyTimestamp()
   updated_at: Date;
 
-  @ApiProperty({ default: null })
+  @ApiPropertyDeletedAt()
   deleted_at: Date | null;
 }

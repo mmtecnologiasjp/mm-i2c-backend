@@ -1,7 +1,7 @@
+import { ApiSoftDeletedAtField } from 'src/shared/utils/swagger/properties-decorators';
 import { User } from '../entities/user.entity';
-import { ApiProperty } from '@nestjs/swagger';
 
 export class SoftDeletedUser extends User {
-  @ApiProperty({ nullable: true, default: new Date() })
+  @ApiSoftDeletedAtField()
   deleted_at: Date | null;
 }

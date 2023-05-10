@@ -1,43 +1,40 @@
 import { StatusEnum } from '@prisma/client';
-import { IsEmail, IsEnum, IsNotEmpty, IsString, IsUUID } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
-export class CreateUserDto {
-  @IsNotEmpty()
-  @IsString()
-  @IsUUID()
-  @ApiProperty()
-  uuid: string;
+import { IsString } from 'class-validator';
+import {
+  IsRequiredEmail,
+  IsRequiredEnum,
+  IsRequiredString,
+} from 'src/shared/utils/class-validator/decorators';
+import {
+  ApiPropertyEmail,
+  ApiPropertyEnum,
+  ApiPropertyLastName,
+  ApiPropertyRequiredFirstName,
+  ApiPropertyRequiredString,
+} from 'src/shared/utils/swagger/properties-decorators';
 
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty()
+export class CreateUserDto {
+  @IsRequiredString()
+  @ApiPropertyRequiredFirstName()
   first_name: string;
 
   @IsString()
-  @ApiProperty()
+  @ApiPropertyLastName()
   last_name: string;
 
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty()
+  @IsRequiredString()
+  @ApiPropertyRequiredFirstName()
   username: string;
 
-  @IsNotEmpty()
-  @IsEmail()
-  @ApiProperty()
+  @IsRequiredEmail()
+  @ApiPropertyEmail()
   email: string;
 
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty()
+  @IsRequiredString()
+  @ApiPropertyRequiredString()
   password: string;
 
-  @IsNotEmpty()
-  @IsEnum(StatusEnum)
-  @ApiProperty()
+  @IsRequiredEnum(StatusEnum)
+  @ApiPropertyEnum({ Default: StatusEnum.Active, Enum: StatusEnum })
   status: StatusEnum;
-
-  @IsString()
-  @ApiProperty()
-  avatar_url: string;
 }
