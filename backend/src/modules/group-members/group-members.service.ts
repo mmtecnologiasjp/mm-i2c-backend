@@ -7,7 +7,7 @@ import {
 import { CreateGroupMemberDto } from './dto/create-group-member.dto';
 import { UpdateGroupMemberDto } from './dto/update-group-member.dto';
 import prisma from 'src/client';
-import { tryCatch } from 'src/utils/tryCatch';
+import { tryCatch } from 'src/shared/utils/tryCatch';
 import { Prisma } from '@prisma/client';
 import { PrismaError } from 'prisma-error-enum';
 

@@ -3,12 +3,15 @@ import { Validate } from 'class-validator';
 import {
   IsRequiredEnum,
   IsRequiredString,
-} from 'src/utils/class-validator/decorators';
+} from 'src/shared/utils/class-validator/decorators';
+import {
+  FieldExists,
+  ValidationConstraints,
+} from 'src/shared/utils/class-validator/validators/FieldExists';
 import {
   ApiPropertyEnum,
   ApiPropertyUUID,
-} from 'src/utils/swagger/dto-decorators';
-import { FieldExists, ValidationConstraints } from 'src/validators/FieldExists';
+} from 'src/shared/utils/swagger/dto-decorators';
 
 export class CreateGroupMemberDto {
   @IsRequiredString()

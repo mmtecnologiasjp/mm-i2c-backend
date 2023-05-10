@@ -1,3 +1,4 @@
+import prisma from 'src/client';
 import {
   ConflictException,
   Injectable,
@@ -5,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import prisma from '../client';
 import { PrismaError } from 'prisma-error-enum';
 import { Prisma } from '@prisma/client';
 

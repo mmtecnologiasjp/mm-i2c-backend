@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { prismaMock } from '../prisma-mock';
-import { UsersService } from 'src/users/users.service';
 import {
   user,
   createUserInput,
@@ -8,6 +7,7 @@ import {
 } from './mock/user.service.mock';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { PrismaError } from 'prisma-error-enum';
+import { UsersService } from 'src/modules/users/users.service';
 
 jest.useFakeTimers().setSystemTime(new Date('2023-01-01'));
 

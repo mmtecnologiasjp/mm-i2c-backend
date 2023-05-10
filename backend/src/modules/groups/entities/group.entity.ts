@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { faker } from '@faker-js/faker';
 import { Group as PrismaGroup } from '@prisma/client';
-import { generateUUID } from 'src/utils/uuid/generateUUID';
+import { generateUUID } from 'src/shared/utils/uuid/generateUUID';
 
 export class Group implements PrismaGroup {
   @ApiProperty({ nullable: true, default: generateUUID() })

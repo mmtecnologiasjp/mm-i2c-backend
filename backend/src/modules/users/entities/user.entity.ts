@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { ApiProperty } from '@nestjs/swagger';
 import { User as PrismaUser, StatusEnum } from '@prisma/client';
-import { generateUUID } from 'src/utils/uuid/generateUUID';
+import { generateUUID } from 'src/shared/utils/uuid/generateUUID';
 
 export class User implements PrismaUser {
   @ApiProperty({ default: generateUUID() })

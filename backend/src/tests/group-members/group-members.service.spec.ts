@@ -1,6 +1,5 @@
 import { prismaMock } from '../prisma-mock';
 import { Test } from '@nestjs/testing';
-import { GroupMembersService } from 'src/group-members/group-members.service';
 import {
   groupMemberGroupMock,
   groupMemberMock,
@@ -8,6 +7,7 @@ import {
 } from './mock/grou-members.mock';
 import { NotFoundException } from '@nestjs/common';
 import { RoleEnum } from '@prisma/client';
+import { GroupMembersService } from 'src/modules/group-members/group-members.service';
 
 jest.useFakeTimers().setSystemTime(new Date('2023-01-01'));
 

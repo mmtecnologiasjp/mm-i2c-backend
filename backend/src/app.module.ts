@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { UsersModule } from './users/users.module';
-import { GroupsModule } from './groups/groups.module';
-import { GroupMembersModule } from './group-members/group-members.module';
+import { GroupMembersModule } from './modules/group-members/group-members.module';
+import { GroupsModule } from './modules/groups/groups.module';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
   imports: [UsersModule, GroupsModule, GroupMembersModule],
