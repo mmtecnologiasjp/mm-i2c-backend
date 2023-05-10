@@ -32,7 +32,7 @@ function ApiGetOne({ Schema }: { Schema: Class }) {
 
 function ApiGetAll({ Schema }: { Schema: Class }) {
   return function (target: any, key: string, descriptor: PropertyDescriptor) {
-    ApiOperation({ summary: `Get All` })(target, key, descriptor);
+    ApiOperation({ summary: 'Get All' })(target, key, descriptor);
     ApiOkResponse({
       isArray: true,
       type: Schema,
