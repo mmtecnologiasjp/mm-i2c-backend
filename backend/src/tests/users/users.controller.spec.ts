@@ -1,9 +1,9 @@
 import { prismaMock } from '../prisma-mock';
 import { Test } from '@nestjs/testing';
-import { createUserInput } from './mock/users.service.mock';
 import { groupMemberMock } from '../group-members/mock/group-members.mock';
 import { UsersController } from 'src/modules/users/users.controller';
 import { UsersService } from 'src/modules/users/users.service';
+import { createUserInput } from './mock/users.service.mock';
 
 describe('Users Controller', () => {
   let controller: UsersController;
