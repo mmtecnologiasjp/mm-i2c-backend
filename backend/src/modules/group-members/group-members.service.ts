@@ -47,7 +47,12 @@ export class GroupMembersService {
   }
 
   async softDelete(uuid: string) {
-    const groupMember = prisma.groupMember.update({
+    const groupMember = await this._findGroupMember(uuid);
+
+    if (!groupMember)
+      throw new NotFoundException(`Group member with uuid ${uuid} not found`);
+
+    const groupMemberSoftDeleted = await prisma.groupMember.update({
       data: {
         deleted_at: new Date(),
       },
@@ -56,14 +61,15 @@ export class GroupMembersService {
       },
     });
 
-    if (!groupMember)
-      throw new NotFoundException(`Group member with uuid ${uuid} not found`);
-
-    return groupMember;
+    return groupMemberSoftDeleted;
   }
 
   findGroupMembersByGroupUUID(uuid: string) {
     return prisma.groupMember.findMany({ where: { group_uuid: uuid } });
+  }
+
+  private async _findGroupMember(uuid: string) {
+    return prisma.groupMember.findUnique({ where: { uuid } });
   }
 
   private _handleError(
