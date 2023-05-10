@@ -34,6 +34,8 @@ Table group_members {
   group_uuid uuid [ref: > groups.uuid]
   user_uuid int [ref: > users.uuid]
 
+  role RoleEnum
+
   created_at timestamp
   updated_at timestamp
   deleted_at timestamp
@@ -166,5 +168,9 @@ Enum MessageTypeEnum {
   task
 }
 
+Enum RoleEnum {
+  Admin
+  Member
+}
 //Relationship
 // > many-to-one; < one-to-many; - one-to-one

@@ -63,8 +63,14 @@ model GroupMember {
   user      User   @relation(fields: [user_uuid], references: [uuid])
   user_uuid String @default(uuid())
 
-  group    Group  @relation(fields: [group_id], references: [uuid])
-  group_id String @default(uuid())
+  group    Group  @relation(fields: [group_uuid], references: [uuid])
+  group_uuid String @default(uuid())
+
+  role RoleEnum
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  deleted_at DateTime?
 
   @@map("group_members")
 }
@@ -248,4 +254,9 @@ enum MessageTypeEnum {
   topic
   note
   task
+}
+
+enum RoleEnum {
+  Admin
+  Member
 }
