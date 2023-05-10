@@ -1,7 +1,7 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { Group } from '../entities/group.entity';
+import { ApiSoftDeletedAtField } from 'src/shared/utils/swagger/properties-decorators';
 
 export class SoftDeletedGroup extends Group {
-  @ApiProperty({ nullable: true, default: new Date() })
+  @ApiSoftDeletedAtField()
   deleted_at: Date | null;
 }

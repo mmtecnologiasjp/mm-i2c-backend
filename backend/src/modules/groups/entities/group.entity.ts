@@ -1,30 +1,34 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { faker } from '@faker-js/faker';
 import { Group as PrismaGroup } from '@prisma/client';
-import { generateUUID } from 'src/shared/utils/uuid/generateUUID';
+import {
+  ApiPropertyDeletedAt,
+  ApiPropertyDescription,
+  ApiPropertyImageURL,
+  ApiPropertyTimestamp,
+  ApiPropertyUUID,
+} from 'src/shared/utils/swagger/properties-decorators';
 
 export class Group implements PrismaGroup {
-  @ApiProperty({ nullable: true, default: generateUUID() })
+  @ApiPropertyUUID()
   uuid: string;
 
-  @ApiProperty({ default: faker.company.name() })
+  @ApiPropertyUUID()
   name: string;
 
-  @ApiProperty({ nullable: true, default: faker.lorem.paragraph(1) })
+  @ApiPropertyDescription()
   description: string | null;
 
-  @ApiProperty({ nullable: true, default: faker.image.technics() })
+  @ApiPropertyImageURL()
   image_url: string | null;
 
-  @ApiProperty({ default: generateUUID() })
+  @ApiPropertyUUID()
   creator_uuid: string;
 
-  @ApiProperty({ default: new Date() })
+  @ApiPropertyTimestamp()
   created_at: Date;
 
-  @ApiProperty({ default: new Date() })
+  @ApiPropertyTimestamp()
   updated_at: Date;
 
-  @ApiProperty({ nullable: true, default: null })
+  @ApiPropertyDeletedAt()
   deleted_at: Date | null;
 }
