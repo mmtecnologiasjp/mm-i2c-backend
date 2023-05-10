@@ -79,7 +79,12 @@ export class GroupMembersService {
   }
 
   findGroupMembersByGroupUUID(uuid: string) {
-    return prisma.groupMember.findMany({ where: { group_uuid: uuid } });
+    return prisma.groupMember.findMany({
+      where: { group_uuid: uuid },
+      include: {
+        user: true,
+      },
+    });
   }
 
   private async _findGroupMember(uuid: string) {

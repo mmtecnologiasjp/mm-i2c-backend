@@ -5,6 +5,7 @@ import { UpdateGroupMemberDto } from './dto/update-group-member.dto';
 import {
   ApiCreate,
   ApiEndpoints,
+  ApiGetAll,
   ApiGetOne,
   ApiSoftDelete,
   ApiUpdate,
@@ -48,7 +49,7 @@ export class GroupMembersController {
   }
 
   @Get('/group/:groupUUID')
-  @ApiGetOne({ Schema: GroupMember })
+  @ApiGetAll({ Schema: GroupMember })
   findGroupMembersByGroupUUID(@Param('groupUUID') groupUUID: string) {
     return this.groupMembersService.findGroupMembersByGroupUUID(groupUUID);
   }

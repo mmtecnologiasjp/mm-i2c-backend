@@ -11,6 +11,7 @@ import { ConflictException, NotFoundException } from '@nestjs/common';
 import { GroupMembersService } from 'src/modules/group-members/group-members.service';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { PrismaError } from 'prisma-error-enum';
+import { userMock } from '../users/mock/users.service.mock';
 
 jest.useFakeTimers().setSystemTime(new Date('2023-01-01'));
 
@@ -59,12 +60,14 @@ describe('GroupMembers Service', () => {
 
   describe('findAllGroupMembersByGroupUUID', () => {
     it('should return an array of group members', async () => {
-      prismaMock.groupMember.findMany.mockResolvedValue([groupMemberMock]);
+      const groupMemberWithUser = { ...groupMemberMock, user: userMock };
+
+      prismaMock.groupMember.findMany.mockResolvedValue([groupMemberWithUser]);
       const groupMember = await service.findGroupMembersByGroupUUID(
         groupMemberGroupMock.uuid,
       );
 
-      expect(groupMember).toEqual([groupMemberMock]);
+      expect(groupMember).toEqual([groupMemberWithUser]);
     });
   });
 
