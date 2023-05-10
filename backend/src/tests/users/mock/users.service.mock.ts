@@ -4,13 +4,13 @@ import { CreateUserDto } from 'src/modules/users/dto/create-user.dto';
 import { UpdateUserDto } from 'src/modules/users/dto/update-user.dto';
 import { generateUUID } from 'src/shared/utils/uuid/generateUUID';
 
-export const user: User = {
+export const userMock: User = {
   uuid: generateUUID(),
   first_name: 'John',
   last_name: 'Doe',
-  email: '',
-  avatar_url: '',
-  password: '123',
+  email: faker.internet.email(),
+  avatar_url: faker.internet.avatar(),
+  password: faker.internet.password(),
   status: StatusEnum.Active,
   username: 'johndoe',
   created_at: new Date(),
@@ -21,8 +21,8 @@ export const user: User = {
 export const createUserInput: CreateUserDto = {
   first_name: 'John',
   last_name: 'Doe',
-  email: '',
-  password: '123',
+  email: faker.internet.email(),
+  password: faker.internet.password(),
   status: StatusEnum.Active,
   username: 'johndoe',
 };
