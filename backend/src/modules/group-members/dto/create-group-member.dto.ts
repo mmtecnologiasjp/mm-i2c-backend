@@ -1,27 +1,23 @@
 import { RoleEnum } from '@prisma/client';
-import { Validate } from 'class-validator';
 import {
   IsRequiredEnum,
-  IsRequiredString,
+  IsRequiredUUID,
+  ValidateFieldExists,
 } from 'src/shared/utils/class-validator/decorators';
-import {
-  FieldExists,
-  ValidationConstraints,
-} from 'src/shared/utils/class-validator/validators/FieldExists';
 import {
   ApiPropertyEnum,
   ApiPropertyUUID,
-} from 'src/shared/utils/swagger/dto-decorators';
+} from 'src/shared/utils/swagger/properties-decorators';
 
 export class CreateGroupMemberDto {
-  @IsRequiredString()
+  @IsRequiredUUID()
   @ApiPropertyUUID()
-  @Validate(FieldExists, ['group', 'uuid'] as ValidationConstraints)
+  @ValidateFieldExists('group', 'uuid')
   group_uuid: string;
 
-  @IsRequiredString()
+  @IsRequiredUUID()
   @ApiPropertyUUID()
-  @Validate(FieldExists, ['user', 'uuid'] as ValidationConstraints)
+  @ValidateFieldExists('user', 'uuid')
   user_uuid: string;
 
   @IsRequiredEnum(RoleEnum)
