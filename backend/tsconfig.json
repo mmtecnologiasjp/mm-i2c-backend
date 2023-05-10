@@ -16,7 +16,7 @@
     "strictNullChecks": true, // This attribute as false will cause an error when running the tests
     "noImplicitAny": false,
     "strictBindCallApply": false,
-    "forceConsistentCasingInFileNames": false,
+    "forceConsistentCasingInFileNames": true,
     "strictPropertyInitialization": false,
     "noFallthroughCasesInSwitch": false
   }
