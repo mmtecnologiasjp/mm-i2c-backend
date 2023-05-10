@@ -1,17 +1,20 @@
 import { prismaMock } from '../prisma-mock';
 import { Test } from '@nestjs/testing';
 import {
+  createGroupMemberInput,
   groupMemberGroupMock,
   groupMemberMock,
   groupMemberUserMock,
-} from './mock/grou-members.mock';
-import { NotFoundException } from '@nestjs/common';
-import { RoleEnum } from '@prisma/client';
+  updateGroupMemberInput,
+} from './mock/group-members.mock';
+import { ConflictException, NotFoundException } from '@nestjs/common';
 import { GroupMembersService } from 'src/modules/group-members/group-members.service';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
+import { PrismaError } from 'prisma-error-enum';
 
 jest.useFakeTimers().setSystemTime(new Date('2023-01-01'));
 
-describe('GroupMembers service', () => {
+describe('GroupMembers Service', () => {
   let service: GroupMembersService;
 
   beforeEach(async () => {
@@ -32,9 +35,25 @@ describe('GroupMembers service', () => {
       prismaMock.user.findUnique.mockResolvedValue(groupMemberUserMock);
       prismaMock.groupMember.create.mockResolvedValue(groupMemberMock);
 
-      const groupMember = await service.create(groupMemberMock);
+      const groupMember = await service.create(createGroupMemberInput);
 
       expect(groupMember).toEqual(groupMemberMock);
+    });
+
+    it('should return a comprehensive error if group member already exists', async () => {
+      prismaMock.groupMember.create.mockRejectedValue(
+        new PrismaClientKnownRequestError(
+          'Unique constraint violation',
+          PrismaError.UniqueConstraintViolation,
+          '1',
+        ),
+      );
+
+      const groupMember = service.create(createGroupMemberInput);
+
+      await Promise.all([
+        expect(groupMember).rejects.toThrowError(ConflictException),
+      ]);
     });
   });
 
@@ -60,27 +79,25 @@ describe('GroupMembers service', () => {
 
   describe('update', () => {
     it('should update a group member', async () => {
-      const secondGroupMember: typeof groupMemberMock = {
+      const { role: newRole } = updateGroupMemberInput;
+
+      prismaMock.groupMember.findUnique.mockResolvedValue(groupMemberMock);
+      prismaMock.groupMember.update.mockResolvedValue({
         ...groupMemberMock,
-        role: 'Member',
-        uuid: '02',
-      };
+        role: newRole ?? 'Member',
+      });
 
-      const newRole: RoleEnum = 'Admin';
-      prismaMock.groupMember.findUnique.mockResolvedValue(secondGroupMember);
-      prismaMock.groupMember.update.mockResolvedValue(secondGroupMember);
-
-      const groupMemberUpdated = await service.update(secondGroupMember.uuid, {
+      const groupMemberUpdated = await service.update(groupMemberMock.uuid, {
         role: newRole,
       });
 
-      expect(groupMemberUpdated).toEqual(secondGroupMember);
+      expect(groupMemberUpdated).toHaveProperty('role', newRole);
       expect(prismaMock.groupMember.update).toHaveBeenCalledWith({
         data: {
           role: newRole,
         },
         where: {
-          uuid: secondGroupMember.uuid,
+          uuid: groupMemberMock.uuid,
         },
       });
     });
