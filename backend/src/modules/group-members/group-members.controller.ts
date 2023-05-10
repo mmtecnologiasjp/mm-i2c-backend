@@ -47,7 +47,7 @@ export class GroupMembersController {
     return this.groupMembersService.softDelete(uuid);
   }
 
-  @Get(':groupUUID')
+  @Get('/group/:groupUUID')
   @ApiGetOne({ Schema: GroupMember })
   findGroupMembersByGroupUUID(@Param('groupUUID') groupUUID: string) {
     return this.groupMembersService.findGroupMembersByGroupUUID(groupUUID);
