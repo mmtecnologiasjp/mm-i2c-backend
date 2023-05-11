@@ -16,7 +16,10 @@ const getTestFiles = (folder: string) => {
 
     if (isDirectory) {
       getTestFiles(filePath);
-    } else if (!isControllerTest && !isVerifyPrismaMock && isTestFile) {
+      continue;
+    }
+
+    if (isTestFile && !isControllerTest && !isVerifyPrismaMock) {
       testFiles.push(filePath);
     }
   }
