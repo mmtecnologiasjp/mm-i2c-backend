@@ -3,14 +3,15 @@ import { userMock } from 'src/tests/users/mock/users.service.mock';
 import { group } from '../../groups/mock/groups.service.mock';
 import { CreateGroupMemberDto } from 'src/modules/group-members/dto/create-group-member.dto';
 import { UpdateGroupMemberDto } from 'src/modules/group-members/dto/update-group-member.dto';
+import { generateUUID } from 'src/shared/utils/uuid/generateUUID';
 
-const groupMemberUserMock: User = { ...userMock, uuid: '01' };
+const groupMemberUserMock: User = { ...userMock, uuid: generateUUID() };
 
-const groupMemberGroupMock: Group = { ...group, uuid: '01' };
+const groupMemberGroupMock: Group = { ...group, uuid: generateUUID() };
 
 const groupMemberMock: GroupMember = {
-  group_uuid: '01',
-  user_uuid: '01',
+  group_uuid: generateUUID(),
+  user_uuid: generateUUID(),
   uuid: '01',
   role: 'Admin',
   created_at: new Date(),

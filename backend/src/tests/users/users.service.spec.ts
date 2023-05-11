@@ -1,5 +1,5 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { prismaMock } from '../prisma-mock';
+import { Test, TestingModule } from '@nestjs/testing';
 import {
   createUserInput,
   updateUserInput,
