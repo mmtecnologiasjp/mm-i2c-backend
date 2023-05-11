@@ -7,10 +7,10 @@ import {
 } from '@nestjs/swagger';
 import { Class } from '.';
 
-function ApiEndpoints({ tag, shemas }: { tag: string; shemas: Class[] }) {
+function ApiEndpoints({ tag, schemas }: { tag: string; schemas: Class[] }) {
   return function (target: Class) {
     ApiTags(tag)(target);
-    ApiExtraModels(...shemas)(target);
+    ApiExtraModels(...schemas)(target);
   };
 }
 

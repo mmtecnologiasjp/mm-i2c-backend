@@ -13,7 +13,7 @@ import {
 import { User } from './entities/user.entity';
 import { SoftDeletedUser } from './swagger/users.custom-schemas';
 
-@ApiEndpoints({ tag: 'Users', shemas: [User, SoftDeletedUser] })
+@ApiEndpoints({ tag: 'Users', schemas: [User, SoftDeletedUser] })
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}

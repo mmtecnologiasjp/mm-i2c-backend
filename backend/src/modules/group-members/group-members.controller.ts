@@ -15,7 +15,7 @@ import { SoftDeletedGroupMember } from './swagger/group-members.custom-schemas';
 
 @ApiEndpoints({
   tag: 'GroupMembers',
-  shemas: [GroupMember, SoftDeletedGroupMember],
+  schemas: [GroupMember, SoftDeletedGroupMember],
 })
 @Controller('group-members')
 export class GroupMembersController {
