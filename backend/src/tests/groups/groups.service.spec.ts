@@ -3,7 +3,7 @@ import { Test } from '@nestjs/testing';
 import {
   createGroupInput,
   group,
-  updateDroupInput,
+  updateGroupInput,
 } from './mock/groups.service.mock';
 import { GroupsService } from 'src/modules/groups/groups.service';
 import { NotFoundException } from '@nestjs/common';
@@ -60,7 +60,7 @@ describe('GroupsService', () => {
       prismaMock.group.findUnique.mockResolvedValue(group);
       prismaMock.group.update.mockResolvedValue(group);
 
-      const groupUpdated = await service.update(group.uuid, updateDroupInput);
+      const groupUpdated = await service.update(group.uuid, updateGroupInput);
       expect(groupUpdated).toMatchObject(group);
       expect(groupUpdated).not.toHaveProperty('uuid', '02');
     });
