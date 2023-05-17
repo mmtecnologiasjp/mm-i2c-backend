@@ -18,4 +18,11 @@ const createGroupInput = {
   creator_uuid: '02',
 };
 
-export { group, createGroupInput };
+const updateGroupInput = {
+  name: 'group 2',
+  description: 'description 2',
+  image_url: '',
+  creator_uuid: '02',
+};
+
+export { group, createGroupInput, updateGroupInput };

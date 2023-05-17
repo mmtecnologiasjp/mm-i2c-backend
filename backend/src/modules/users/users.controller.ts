@@ -9,10 +9,11 @@ import {
   ApiGetOne,
   ApiSoftDelete,
   ApiUpdate,
-} from 'src/shared/utils/swagger/decorators';
+} from 'src/shared/utils/swagger/endpoints-decorators';
 import { User } from './entities/user.entity';
 import { SoftDeletedUser } from './swagger/users.custom-schemas';
-@ApiEndpoints({ tag: 'Users', shemas: [User, SoftDeletedUser] })
+
+@ApiEndpoints({ tag: 'Users', schemas: [User, SoftDeletedUser] })
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}

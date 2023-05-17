@@ -1,23 +1,19 @@
-import { GroupMember as PrismaGroupMember, RoleEnum } from '@prisma/client';
+import { PrivateConversation as PrismaPrivateConversation } from '@prisma/client';
 import {
   ApiPropertyDeletedAt,
-  ApiPropertyEnum,
   ApiPropertyTimestamp,
   ApiPropertyUUID,
 } from 'src/shared/utils/swagger/properties-decorators';
 
-export class GroupMember implements PrismaGroupMember {
+export class PrivateConversation implements PrismaPrivateConversation {
   @ApiPropertyUUID()
   uuid: string;
 
   @ApiPropertyUUID()
-  user_uuid: string;
+  from_uuid: string;
 
   @ApiPropertyUUID()
-  group_uuid: string;
-
-  @ApiPropertyEnum({ Enum: RoleEnum, Default: RoleEnum.Admin })
-  role: RoleEnum;
+  to_uuid: string;
 
   @ApiPropertyTimestamp()
   created_at: Date;

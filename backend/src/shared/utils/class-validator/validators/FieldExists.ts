@@ -1,6 +1,7 @@
 import { Prisma } from '@prisma/client';
 import {
   ValidationArguments,
+  ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
 import prisma from 'src/client';
@@ -8,6 +9,7 @@ import prisma from 'src/client';
 type UncapitalizedModelName = Uncapitalize<Prisma.ModelName>;
 export type ValidationConstraints = [UncapitalizedModelName, string];
 
+@ValidatorConstraint({ name: 'fieldExists', async: true })
 export class FieldExists implements ValidatorConstraintInterface {
   async validate(value: string, args: ValidationArguments) {
     const [relatedModel, relatedField] = args.constraints;
@@ -16,6 +18,8 @@ export class FieldExists implements ValidatorConstraintInterface {
       where: { [relatedField]: value },
       select: { uuid: true },
     });
+
+    prisma.$disconnect();
 
     return !!relatedEntity;
   }

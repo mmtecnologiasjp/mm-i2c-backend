@@ -7,10 +7,10 @@ import {
 } from '@nestjs/swagger';
 import { Class } from '.';
 
-function ApiEndpoints({ tag, shemas }: { tag: string; shemas: Class[] }) {
+function ApiEndpoints({ tag, schemas }: { tag: string; schemas: Class[] }) {
   return function (target: Class) {
     ApiTags(tag)(target);
-    ApiExtraModels(...shemas)(target);
+    ApiExtraModels(...schemas)(target);
   };
 }
 
@@ -32,7 +32,7 @@ function ApiGetOne({ Schema }: { Schema: Class }) {
 
 function ApiGetAll({ Schema }: { Schema: Class }) {
   return function (target: any, key: string, descriptor: PropertyDescriptor) {
-    ApiOperation({ summary: `Get All` })(target, key, descriptor);
+    ApiOperation({ summary: 'Get All' })(target, key, descriptor);
     ApiOkResponse({
       isArray: true,
       type: Schema,

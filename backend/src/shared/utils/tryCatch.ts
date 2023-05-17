@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client';
 
-type TryCatch<T> = Promise<
+export type TryCatch<T> = Promise<
   [T, null] | [null, Error] | [null, Prisma.PrismaClientKnownRequestError]
 >;
 

@@ -10,10 +10,10 @@ import {
   ApiGetOne,
   ApiSoftDelete,
   ApiUpdate,
-} from 'src/shared/utils/swagger/decorators';
+} from 'src/shared/utils/swagger/endpoints-decorators';
 import { SoftDeletedGroup } from './swagger/groups.custom-schemas';
 
-@ApiEndpoints({ tag: 'Groups', shemas: [Group, SoftDeletedGroup] })
+@ApiEndpoints({ tag: 'Groups', schemas: [Group, SoftDeletedGroup] })
 @Controller('groups')
 export class GroupsController {
   constructor(private readonly groupsService: GroupsService) {}
