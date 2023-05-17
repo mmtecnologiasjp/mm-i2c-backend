@@ -1,5 +1,6 @@
 import { prismaMock } from '../prisma-mock';
 import { FieldExists } from 'src/shared/utils/class-validator/validators/FieldExists';
+import { generateUUID } from 'src/shared/utils/uuid/generateUUID';
 
 describe('FieldExists', () => {
   let fieldExists: FieldExists;
@@ -12,7 +13,11 @@ describe('FieldExists', () => {
     prismaMock.user.findUnique.mockResolvedValue(null);
     const result = await fieldExists.validate('test', {
       constraints: ['user', 'uuid'],
-    } as any);
+      value: generateUUID(),
+      targetName: 'user',
+      object: {},
+      property: 'user_uuid',
+    });
 
     expect(result).toBe(false);
   });

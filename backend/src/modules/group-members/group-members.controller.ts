@@ -5,16 +5,17 @@ import { UpdateGroupMemberDto } from './dto/update-group-member.dto';
 import {
   ApiCreate,
   ApiEndpoints,
+  ApiGetAll,
   ApiGetOne,
   ApiSoftDelete,
   ApiUpdate,
-} from 'src/shared/utils/swagger/decorators';
+} from 'src/shared/utils/swagger/endpoints-decorators';
 import { GroupMember } from './entities/group-member.entity';
 import { SoftDeletedGroupMember } from './swagger/group-members.custom-schemas';
 
 @ApiEndpoints({
   tag: 'GroupMembers',
-  shemas: [GroupMember, SoftDeletedGroupMember],
+  schemas: [GroupMember, SoftDeletedGroupMember],
 })
 @Controller('group-members')
 export class GroupMembersController {
@@ -47,8 +48,8 @@ export class GroupMembersController {
     return this.groupMembersService.softDelete(uuid);
   }
 
-  @Get(':groupUUID')
-  @ApiGetOne({ Schema: GroupMember })
+  @Get('/group/:groupUUID')
+  @ApiGetAll({ Schema: GroupMember })
   findGroupMembersByGroupUUID(@Param('groupUUID') groupUUID: string) {
     return this.groupMembersService.findGroupMembersByGroupUUID(groupUUID);
   }

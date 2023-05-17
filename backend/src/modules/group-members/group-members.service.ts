@@ -14,6 +14,20 @@ import { PrismaError } from 'prisma-error-enum';
 @Injectable()
 export class GroupMembersService {
   async create(createGroupMemberDto: CreateGroupMemberDto) {
+    const groupMember = await prisma.groupMember.findFirst({
+      where: {
+        group_uuid: createGroupMemberDto.group_uuid,
+        user_uuid: createGroupMemberDto.user_uuid,
+      },
+      select: {
+        uuid: true,
+      },
+    });
+
+    if (groupMember) {
+      throw new ConflictException(`This user already exists in this group`);
+    }
+
     const createGroupMemberPromise = prisma.groupMember.create({
       data: createGroupMemberDto,
     });
@@ -47,7 +61,12 @@ export class GroupMembersService {
   }
 
   async softDelete(uuid: string) {
-    const groupMember = prisma.groupMember.update({
+    const groupMember = await this._findGroupMember(uuid);
+
+    if (!groupMember)
+      throw new NotFoundException(`Group member with uuid ${uuid} not found`);
+
+    const groupMemberSoftDeleted = await prisma.groupMember.update({
       data: {
         deleted_at: new Date(),
       },
@@ -56,14 +75,20 @@ export class GroupMembersService {
       },
     });
 
-    if (!groupMember)
-      throw new NotFoundException(`Group member with uuid ${uuid} not found`);
-
-    return groupMember;
+    return groupMemberSoftDeleted;
   }
 
   findGroupMembersByGroupUUID(uuid: string) {
-    return prisma.groupMember.findMany({ where: { group_uuid: uuid } });
+    return prisma.groupMember.findMany({
+      where: { group_uuid: uuid },
+      include: {
+        user: true,
+      },
+    });
+  }
+
+  private async _findGroupMember(uuid: string) {
+    return prisma.groupMember.findUnique({ where: { uuid } });
   }
 
   private _handleError(

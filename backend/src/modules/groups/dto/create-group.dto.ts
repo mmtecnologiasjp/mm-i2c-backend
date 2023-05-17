@@ -1,26 +1,31 @@
-import { IsNotEmpty, IsString, Validate } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { IsString } from 'class-validator';
 import {
-  FieldExists,
-  ValidationConstraints,
-} from 'src/shared/utils/class-validator/validators/FieldExists';
+  IsRequiredString,
+  IsRequiredUUID,
+  ValidateFieldExists,
+} from 'src/shared/utils/class-validator/decorators';
+import {
+  ApiPropertyDescription,
+  ApiPropertyImageURL,
+  ApiPropertyRequiredFirstName,
+  ApiPropertyUUID,
+} from 'src/shared/utils/swagger/properties-decorators';
 
 export class CreateGroupDto {
-  @IsString()
-  @IsNotEmpty()
-  @ApiProperty({ default: 'MM Communications' })
+  @IsRequiredString()
+  @ApiPropertyRequiredFirstName()
   name: string;
 
   @IsString()
-  @ApiProperty({ nullable: true, default: 'MM Communications group' })
+  @ApiPropertyDescription()
   description: string | null;
 
   @IsString()
-  @ApiProperty({ nullable: true, default: 'https://i.imgur.com/2uVJj1a.png' })
+  @ApiPropertyImageURL()
   image_url: string | null;
 
-  @IsString()
-  @Validate(FieldExists, ['user', 'uuid'] as ValidationConstraints)
-  @ApiProperty({ default: '02' })
+  @IsRequiredUUID()
+  @ApiPropertyUUID()
+  @ValidateFieldExists('user', 'uuid')
   creator_uuid: string;
 }
