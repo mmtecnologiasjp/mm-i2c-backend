@@ -9,6 +9,7 @@ import {
 import * as tryCatchMock from 'src/shared/utils/tryCatch';
 import type { TryCatch } from 'src/shared/utils/tryCatch';
 import { PrivateConversation } from '@prisma/client';
+import { messageMock } from '../messages/mock/messages.service.mock';
 
 jest.mock('src/shared/utils/tryCatch');
 jest.useFakeTimers().setSystemTime(new Date('2023-01-01'));
@@ -28,11 +29,9 @@ describe('Private Conversations Service', () => {
     expect(service).toBeDefined();
   });
 
-  describe('findAllPrivateConversationsByUserUUID', () => {
+  describe('findAllByUserUUID', () => {
     it('should call private conversation findMany with user uuid', async () => {
-      await service.findPrivateConversationsByUserUUID(
-        privateConversationFromUserMock.uuid,
-      );
+      await service.findAllByUserUUID(privateConversationFromUserMock.uuid);
 
       expect(prismaMock.privateConversation.findMany).toHaveBeenCalledWith({
         where: {
@@ -77,6 +76,23 @@ describe('Private Conversations Service', () => {
         );
 
         expect(privateConversationPromise).rejects.toThrowError(Error);
+      });
+    });
+
+    describe('findOne', () => {
+      it('should find a private conversation and return all messages', async () => {
+        prismaMock.privateConversation.findUnique.mockResolvedValue({
+          ...privateConversationMock,
+          messages: prismaMock.message.findMany.mockResolvedValue([
+            messageMock,
+          ]),
+        });
+
+        const privateConversation = await service.findOne(
+          privateConversationMock.uuid,
+        );
+
+        expect(privateConversation).toHaveProperty('messages');
       });
     });
   });
