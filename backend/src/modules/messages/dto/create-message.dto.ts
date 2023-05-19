@@ -20,6 +20,7 @@ export class CreateMessageDto {
 
   @ApiPropertyUUID()
   @IsUUID()
+  @IsOptional()
   @ValidateFieldExists('group', 'uuid')
   group_uuid: string | null;
 
