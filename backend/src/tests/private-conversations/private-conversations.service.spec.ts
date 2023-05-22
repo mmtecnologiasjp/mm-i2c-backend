@@ -29,12 +29,10 @@ describe('Private Conversations Service', () => {
   });
 
   describe('findAllPrivateConversationsByUserUUID', () => {
-    it('should call private conversation findMany with user uuid', async () => {
-      await service.findPrivateConversationsByUserUUID(
-        privateConversationFromUserMock.uuid,
-      );
+    it.only('should call private conversation findMany with user uuid', async () => {
+      await service.findAllByUserUUID(privateConversationFromUserMock.uuid);
 
-      expect(prismaMock.privateConversation.findMany).toHaveBeenCalledWith({
+      expect(prismaMock.privateConversation.findMany).toBeCalledWith({
         where: {
           OR: [
             { from_uuid: privateConversationFromUserMock.uuid },

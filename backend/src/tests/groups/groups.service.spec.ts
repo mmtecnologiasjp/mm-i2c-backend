@@ -7,6 +7,7 @@ import {
 } from './mock/groups.service.mock';
 import { GroupsService } from 'src/modules/groups/groups.service';
 import { NotFoundException } from '@nestjs/common';
+import { messageMock } from '../messages/mock/messages.service.mock';
 
 jest.useFakeTimers().setSystemTime(new Date('2023-01-01'));
 
@@ -37,11 +38,15 @@ describe('GroupsService', () => {
 
   describe('findOne', () => {
     it('should return a group', async () => {
-      prismaMock.group.findUnique.mockResolvedValue(group);
+      prismaMock.group.findUnique.mockResolvedValue({
+        ...group,
+        messages: prismaMock.message.findMany.mockResolvedValue([messageMock]),
+      });
 
       const groupFound = await service.findOne('01');
       expect(groupFound).toMatchObject(group);
       expect(groupFound).not.toHaveProperty('uuid', '02');
+      expect(groupFound).toHaveProperty('messages');
     });
   });
 

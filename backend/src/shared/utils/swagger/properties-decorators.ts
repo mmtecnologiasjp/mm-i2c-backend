@@ -61,6 +61,21 @@ function ApiPropertyEnum({
   };
 }
 
+function ApiPropertyRequiredEnum({
+  Enum,
+  Default,
+}: {
+  Enum: object;
+  Default: string;
+}): PropertyDecorator {
+  return function (target: object, propertyKey: string | symbol) {
+    ApiProperty({ nullable: false, enum: Enum, default: Default })(
+      target,
+      propertyKey,
+    );
+  };
+}
+
 function ApiPropertyTimestamp(): PropertyDecorator {
   return function (target: object, propertyKey: string | symbol) {
     ApiProperty({
@@ -149,8 +164,8 @@ export {
   ApiPropertyDeletedAt,
   ApiPropertyTimestamp,
   ApiPropertyEnum,
+  ApiPropertyRequiredEnum,
   ApiPropertyUUID,
-  ApiPropertyRequiredUUID,
   ApiPropertyLastName,
   ApiPropertyDescription,
   ApiPropertyImageURL,
@@ -158,4 +173,5 @@ export {
   ApiPropertyRequiredString,
   ApiPropertyEmail,
   ApiSoftDeletedAtField,
+  ApiPropertyRequiredUUID,
 };

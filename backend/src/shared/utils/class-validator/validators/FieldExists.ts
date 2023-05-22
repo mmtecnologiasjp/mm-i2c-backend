@@ -14,6 +14,10 @@ export class FieldExists implements ValidatorConstraintInterface {
   async validate(value: string, args: ValidationArguments) {
     const [relatedModel, relatedField] = args.constraints;
 
+    const valueWasSent = Boolean(value);
+
+    if (!valueWasSent) return true;
+
     const relatedEntity = await prisma[relatedModel].findUnique({
       where: { [relatedField]: value },
       select: { uuid: true },

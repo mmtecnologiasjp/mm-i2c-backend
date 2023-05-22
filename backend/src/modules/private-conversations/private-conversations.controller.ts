@@ -8,10 +8,11 @@ import {
   ApiGetOne,
 } from 'src/shared/utils/swagger/endpoints-decorators';
 import { PrivateConversation } from './entities/private-conversation.entity';
+import { PrivateConversationWithMessages } from './swagger/schemas/private-conversations-with-messages';
 
 @ApiEndpoints({
   tag: 'PrivateConversations',
-  schemas: [PrivateConversation],
+  schemas: [PrivateConversation, PrivateConversationWithMessages],
 })
 @Controller('private-conversations')
 export class PrivateConversationsController {
@@ -27,17 +28,15 @@ export class PrivateConversationsController {
     );
   }
 
-  @Get()
-  @ApiGetOne({ Schema: PrivateConversation })
+  @Get('/:uuid')
+  @ApiGetOne({ Schema: PrivateConversationWithMessages })
   findOne(@Param('uuid') uuid: string) {
     return this.privateConversationsService.findOne(uuid);
   }
 
-  @Get(':userUUID')
+  @Get('/user/:userUUID')
   @ApiGetAll({ Schema: PrivateConversation })
-  findPrivateConversationsByUserUUID(@Param('userUUID') userUUID: string) {
-    return this.privateConversationsService.findPrivateConversationsByUserUUID(
-      userUUID,
-    );
+  findAllByUserUUID(@Param('userUUID') userUUID: string) {
+    return this.privateConversationsService.findAllByUserUUID(userUUID);
   }
 }
