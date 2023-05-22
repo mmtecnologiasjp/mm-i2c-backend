@@ -1,21 +1,18 @@
-import { prismaMock } from '../prisma-mock';
 import { Test } from '@nestjs/testing';
-import { createGroupInput, group } from './mock/groups.service.mock';
 import { GroupsService } from 'src/modules/groups/groups.service';
 import { GroupsController } from '../../modules/groups/groups.controller';
+import { GroupMembersService } from 'src/modules/group-members/group-members.service';
 
-describe('UserController', () => {
+describe('Groups Controller', () => {
   let controller: GroupsController;
-  let service: GroupsService;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       controllers: [GroupsController],
-      providers: [GroupsService],
+      providers: [GroupsService, GroupMembersService],
     }).compile();
 
     controller = module.get(GroupsController);
-    service = module.get(GroupsService);
   });
 
   it('should be defined', () => {

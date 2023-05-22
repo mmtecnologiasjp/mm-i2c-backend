@@ -8,17 +8,26 @@ import { CreateGroupDto } from './dto/create-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
 import { tryCatch } from 'src/shared/utils/tryCatch';
 import { Prisma } from '@prisma/client';
+import { GroupMembersService } from '../group-members/group-members.service';
 
 @Injectable()
 export class GroupsService {
+  constructor(private readonly groupMembersService: GroupMembersService) {}
+
   async create(createGroupDto: CreateGroupDto) {
-    const createGroupPromise = prisma.group.create({ data: createGroupDto });
+    const groupCreated = await prisma.group.create({ data: createGroupDto });
 
-    const [data, error] = await tryCatch(createGroupPromise);
+    const creatorRole = 'Admin';
 
-    this._handleError(error);
+    const creator = {
+      group_uuid: groupCreated.uuid,
+      role: creatorRole,
+      user_uuid: createGroupDto.creator_uuid,
+    } as const;
 
-    return data;
+    await this.groupMembersService.create(creator);
+
+    return groupCreated;
   }
 
   findAll() {
