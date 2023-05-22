@@ -5,6 +5,19 @@ import { faker } from '@faker-js/faker';
 function ApiPropertyUUID(options?: ApiPropertyOptions): PropertyDecorator {
   return function (target: object, propertyKey: string | symbol) {
     ApiProperty({
+      nullable: true,
+      default: generateUUID(),
+      type: String,
+      ...options,
+    })(target, propertyKey);
+  };
+}
+
+function ApiPropertyRequiredUUID(
+  options?: ApiPropertyOptions,
+): PropertyDecorator {
+  return function (target: object, propertyKey: string | symbol) {
+    ApiProperty({
       nullable: false,
       default: generateUUID(),
       type: String,
@@ -32,6 +45,21 @@ function ApiPropertyEnum({
 }): PropertyDecorator {
   return function (target: object, propertyKey: string | symbol) {
     ApiProperty({ nullable: true, enum: Enum, default: Default })(
+      target,
+      propertyKey,
+    );
+  };
+}
+
+function ApiPropertyRequiredEnum({
+  Enum,
+  Default,
+}: {
+  Enum: object;
+  Default: string;
+}): PropertyDecorator {
+  return function (target: object, propertyKey: string | symbol) {
+    ApiProperty({ nullable: false, enum: Enum, default: Default })(
       target,
       propertyKey,
     );
@@ -126,6 +154,7 @@ export {
   ApiPropertyDeletedAt,
   ApiPropertyTimestamp,
   ApiPropertyEnum,
+  ApiPropertyRequiredEnum,
   ApiPropertyUUID,
   ApiPropertyLastName,
   ApiPropertyDescription,
@@ -133,4 +162,5 @@ export {
   ApiPropertyRequiredString,
   ApiPropertyEmail,
   ApiSoftDeletedAtField,
+  ApiPropertyRequiredUUID,
 };

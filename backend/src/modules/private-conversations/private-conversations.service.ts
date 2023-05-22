@@ -18,9 +18,18 @@ export class PrivateConversationsService {
     return data;
   }
 
-  findPrivateConversationsByUserUUID(uuid: string) {
+  findAllByUserUUID(uuid: string) {
     return prisma.privateConversation.findMany({
       where: { from_uuid: uuid, OR: { to_uuid: uuid } },
+    });
+  }
+
+  findOne(uuid: string) {
+    return prisma.privateConversation.findUnique({
+      where: { uuid },
+      include: {
+        messages: true,
+      },
     });
   }
 

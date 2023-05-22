@@ -1,5 +1,5 @@
 import { StatusEnum } from '@prisma/client';
-import { IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 import {
   IsRequiredEmail,
   IsRequiredEnum,
@@ -18,9 +18,10 @@ export class CreateUserDto {
   @ApiPropertyRequiredFirstName()
   first_name: string;
 
+  @IsOptional()
   @IsString()
   @ApiPropertyLastName()
-  last_name: string;
+  last_name?: string;
 
   @IsRequiredString()
   @ApiPropertyRequiredFirstName()

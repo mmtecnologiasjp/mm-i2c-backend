@@ -26,7 +26,10 @@ export class GroupsService {
   }
 
   findOne(uuid: string) {
-    return prisma.group.findUnique({ where: { uuid } });
+    return prisma.group.findUnique({
+      where: { uuid },
+      include: { messages: true },
+    });
   }
 
   async update(uuid: string, updateGroupDto: UpdateGroupDto) {
