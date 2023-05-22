@@ -1,12 +1,9 @@
-import { prismaMock } from '../prisma-mock';
 import { Test } from '@nestjs/testing';
-import { createGroupInput, group } from './mock/groups.service.mock';
 import { GroupsService } from 'src/modules/groups/groups.service';
 import { GroupsController } from '../../modules/groups/groups.controller';
 
 describe('UserController', () => {
   let controller: GroupsController;
-  let service: GroupsService;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -15,7 +12,6 @@ describe('UserController', () => {
     }).compile();
 
     controller = module.get(GroupsController);
-    service = module.get(GroupsService);
   });
 
   it('should be defined', () => {

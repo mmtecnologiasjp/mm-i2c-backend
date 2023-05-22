@@ -63,13 +63,13 @@ model GroupMember {
   user      User   @relation(fields: [user_uuid], references: [uuid])
   user_uuid String @default(uuid())
 
-  group    Group  @relation(fields: [group_uuid], references: [uuid])
+  group      Group  @relation(fields: [group_uuid], references: [uuid])
   group_uuid String @default(uuid())
 
   role RoleEnum
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
   deleted_at DateTime?
 
   @@map("group_members")
@@ -109,8 +109,8 @@ model Message {
 
   type MessageTypeEnum
 
-  created_at        DateTime           @default(now())
-  updated_at        DateTime           @updatedAt
+  created_at        DateTime          @default(now())
+  updated_at        DateTime          @updatedAt
   deleted_at        DateTime?
   messages_metadata MessageMetadata[]
 
@@ -142,8 +142,8 @@ model StorageFile {
   url        String
   size_bytes Int
 
-  created_at           DateTime               @default(now())
-  updated_at           DateTime               @updatedAt
+  created_at           DateTime              @default(now())
+  updated_at           DateTime              @updatedAt
   deleted_at           DateTime?
   StorageFilesMetadata StorageFileMetadata[]
 
@@ -168,11 +168,11 @@ model StorageFileMetadata {
 model Task {
   uuid        String       @id @default(uuid())
   title       String
-  description String
-  label       String
+  description String?
+  label       String?
   state       String
   priority    PriorityEnum
-  sprint      String
+  sprint      String?
   created_at  DateTime     @default(now())
   updated_at  DateTime     @updatedAt
   deleted_at  DateTime?
@@ -194,7 +194,7 @@ model Task {
 model TasksAssignee {
   uuid String @id @default(uuid())
 
-  task      Task  @relation(fields: [task_uuid], references: [uuid])
+  task      Task   @relation(fields: [task_uuid], references: [uuid])
   task_uuid String
 
   user      User   @relation(fields: [user_uuid], references: [uuid])

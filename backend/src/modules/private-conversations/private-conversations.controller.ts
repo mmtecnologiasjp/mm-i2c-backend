@@ -5,6 +5,7 @@ import {
   ApiCreate,
   ApiEndpoints,
   ApiGetAll,
+  ApiGetOne,
 } from 'src/shared/utils/swagger/endpoints-decorators';
 import { PrivateConversation } from './entities/private-conversation.entity';
 
@@ -24,6 +25,12 @@ export class PrivateConversationsController {
     return this.privateConversationsService.create(
       createPrivateConversationDto,
     );
+  }
+
+  @Get()
+  @ApiGetOne({ Schema: PrivateConversation })
+  findOne(@Param('uuid') uuid: string) {
+    return this.privateConversationsService.findOne(uuid);
   }
 
   @Get(':userUUID')

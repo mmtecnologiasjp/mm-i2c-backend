@@ -5,10 +5,33 @@ import { faker } from '@faker-js/faker';
 function ApiPropertyUUID(options?: ApiPropertyOptions): PropertyDecorator {
   return function (target: object, propertyKey: string | symbol) {
     ApiProperty({
+      nullable: true,
+      default: generateUUID(),
+      type: String,
+      ...options,
+    })(target, propertyKey);
+  };
+}
+
+function ApiPropertyRequiredUUID(
+  options?: ApiPropertyOptions,
+): PropertyDecorator {
+  return function (target: object, propertyKey: string | symbol) {
+    ApiProperty({
       nullable: false,
       default: generateUUID(),
       type: String,
       ...options,
+    })(target, propertyKey);
+  };
+}
+
+function ApiPropertyString() {
+  return function (target: object, propertyKey: string | symbol) {
+    ApiProperty({
+      nullable: true,
+      default: faker.lorem.word({ length: 12 }),
+      type: String,
     })(target, propertyKey);
   };
 }
@@ -127,9 +150,11 @@ export {
   ApiPropertyTimestamp,
   ApiPropertyEnum,
   ApiPropertyUUID,
+  ApiPropertyRequiredUUID,
   ApiPropertyLastName,
   ApiPropertyDescription,
   ApiPropertyImageURL,
+  ApiPropertyString,
   ApiPropertyRequiredString,
   ApiPropertyEmail,
   ApiSoftDeletedAtField,
