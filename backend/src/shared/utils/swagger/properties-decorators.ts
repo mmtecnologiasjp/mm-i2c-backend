@@ -26,6 +26,16 @@ function ApiPropertyRequiredUUID(
   };
 }
 
+function ApiPropertyString() {
+  return function (target: object, propertyKey: string | symbol) {
+    ApiProperty({
+      nullable: true,
+      default: faker.lorem.word({ length: 12 }),
+      type: String,
+    })(target, propertyKey);
+  };
+}
+
 function ApiPropertyRequiredString() {
   return function (target: object, propertyKey: string | symbol) {
     ApiProperty({
@@ -159,6 +169,7 @@ export {
   ApiPropertyLastName,
   ApiPropertyDescription,
   ApiPropertyImageURL,
+  ApiPropertyString,
   ApiPropertyRequiredString,
   ApiPropertyEmail,
   ApiSoftDeletedAtField,

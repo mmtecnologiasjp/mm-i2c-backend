@@ -30,8 +30,8 @@ export class PrivateConversationsController {
 
   @Get('/:uuid')
   @ApiGetOne({ Schema: PrivateConversationWithMessages })
-  findOne(@Param('uuid') uid: string) {
-    return this.privateConversationsService.findOne(uid);
+  findOne(@Param('uuid') uuid: string) {
+    return this.privateConversationsService.findOne(uuid);
   }
 
   @Get('/user/:userUUID')

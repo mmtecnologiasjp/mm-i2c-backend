@@ -37,7 +37,7 @@ export class GroupsService {
   findOne(uuid: string) {
     return prisma.group.findUnique({
       where: { uuid },
-      include: { messages: true },
+      include: { messages: true, tasks: true },
     });
   }
 

@@ -11,6 +11,7 @@ export class CreatePrivateConversationDto {
   from_uuid: string;
 
   @ApiPropertyUUID()
+  @IsRequiredUUID()
   @ValidateFieldExists('user', 'uuid')
   to_uuid: string;
 }
