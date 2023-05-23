@@ -12,6 +12,8 @@ import {
 } from 'src/shared/utils/swagger/endpoints-decorators';
 import { User } from './entities/user.entity';
 import { SoftDeletedUser } from './swagger/users.custom-schemas';
+import { EmailParam } from 'src/shared/utils/class-validator/validators/EmailParam';
+import { ApiParam } from '@nestjs/swagger';
 
 @ApiEndpoints({ tag: 'Users', schemas: [User, SoftDeletedUser] })
 @Controller('users')
@@ -34,6 +36,17 @@ export class UsersController {
   @ApiGetOne({ Schema: User })
   findOne(@Param('uuid') uuid: string) {
     return this.usersService.findOne(uuid);
+  }
+
+  @Get('/email/:email')
+  @ApiGetOne({ Schema: User })
+  @ApiParam({
+    name: 'email',
+    required: true,
+    type: 'string',
+  })
+  findOneByEmail(@Param() params: EmailParam) {
+    return this.usersService.findOneByEmail(params.email);
   }
 
   @Patch(':uuid')
