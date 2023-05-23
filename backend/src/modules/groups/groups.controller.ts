@@ -51,4 +51,10 @@ export class GroupsController {
   softDelete(@Param('uuid') uuid: string) {
     return this.groupsService.softDelete(uuid);
   }
+
+  @Get('/user/:uuid')
+  @ApiGetAll({ Schema: Group })
+  findAllByUserUUID(@Param('uuid') uuid: string) {
+    return this.groupsService.findAllByUserUUID(uuid);
+  }
 }

@@ -37,6 +37,12 @@ describe('Groups Controller', () => {
     });
   });
 
+  describe('findAllByUserUUID', () => {
+    it('should be defined', () => {
+      expect(controller.findAllByUserUUID).toBeDefined();
+    });
+  });
+
   describe('update', () => {
     it('should be defined', () => {
       expect(controller.update).toBeDefined();

@@ -75,6 +75,17 @@ export class GroupsService {
     return data;
   }
 
+  async findAllByUserUUID(uuid: string) {
+    const groupMember = await prisma.groupMember.findMany({
+      where: { user_uuid: uuid },
+      select: { group: true },
+    });
+
+    const groups = groupMember.map((item) => item.group);
+
+    return groups;
+  }
+
   private _getGroup(uuid: string) {
     return prisma.group.findUnique({ where: { uuid } });
   }
