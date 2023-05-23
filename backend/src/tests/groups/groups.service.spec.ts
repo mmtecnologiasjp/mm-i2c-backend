@@ -13,6 +13,7 @@ import {
   groupMemberMock,
 } from '../group-members/mock/group-members.mock';
 import { GroupMembersService } from '../../modules/group-members/group-members.service';
+import { userMock } from '../users/mock/users.service.mock';
 
 jest.useFakeTimers().setSystemTime(new Date('2023-01-01'));
 
@@ -133,6 +134,23 @@ describe('GroupsService', () => {
 
       const groupNotFoundPromise = service.softDelete('04');
       expect(groupNotFoundPromise).rejects.toThrowError(NotFoundException);
+    });
+  });
+
+  describe('findAllByUserUUID', () => {
+    it('should return an array of groups', async () => {
+      const onlyGroupSelectedFromGroupMember = {
+        ...groupMemberMock,
+        group,
+      };
+
+      prismaMock.groupMember.findMany.mockResolvedValue([
+        onlyGroupSelectedFromGroupMember,
+      ]);
+
+      const groups = await service.findAllByUserUUID(userMock.uuid);
+
+      expect(groups).toEqual([group]);
     });
   });
 });
