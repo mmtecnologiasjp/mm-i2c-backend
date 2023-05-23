@@ -38,6 +38,12 @@ describe('Users Controller', () => {
     });
   });
 
+  describe('findOneByEmail', () => {
+    it('should be defined', () => {
+      expect(controller.findOneByEmail).toBeDefined();
+    });
+  });
+
   describe('update', () => {
     it('should be defined', () => {
       expect(controller.update).toBeDefined();

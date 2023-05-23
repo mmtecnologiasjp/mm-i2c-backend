@@ -50,6 +50,16 @@ describe('Users Serice', () => {
     });
   });
 
+  describe('findOneByEmail', () => {
+    it('should return a user found by email', async () => {
+      prismaMock.user.findUnique.mockResolvedValue(userMock);
+      await service.findOneByEmail(userMock.email);
+      expect(prismaMock.user.findUnique).toBeCalledWith({
+        where: { email: userMock.email },
+      });
+    });
+  });
+
   describe('create', () => {
     it('should create a user', async () => {
       prismaMock.user.create.mockResolvedValue(userMock);
