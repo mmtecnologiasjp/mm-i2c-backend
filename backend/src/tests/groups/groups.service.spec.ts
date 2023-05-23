@@ -8,18 +8,33 @@ import {
 import { GroupsService } from 'src/modules/groups/groups.service';
 import { NotFoundException } from '@nestjs/common';
 import { messageMock } from '../messages/mock/messages.service.mock';
+import {
+  createGroupMemberInput,
+  groupMemberMock,
+} from '../group-members/mock/group-members.mock';
+import { GroupMembersService } from '../../modules/group-members/group-members.service';
 
 jest.useFakeTimers().setSystemTime(new Date('2023-01-01'));
 
 describe('GroupsService', () => {
   let service: GroupsService;
+  let groupMemberService: GroupMembersService;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
-      providers: [GroupsService],
+      providers: [
+        GroupsService,
+        {
+          provide: GroupMembersService,
+          useValue: {
+            create: prismaMock.groupMember.create,
+          },
+        },
+      ],
     }).compile();
 
     service = module.get(GroupsService);
+    groupMemberService = module.get(GroupMembersService);
   });
 
   it('should be defined', () => {
@@ -57,6 +72,29 @@ describe('GroupsService', () => {
       const groupCreated = await service.create(createGroupInput);
       expect(groupCreated).toMatchObject(group);
       expect(groupCreated).not.toHaveProperty('uuid', '02');
+    });
+
+    it('should create a register in group-members when creating a group', async () => {
+      const newGroup = {
+        ...group,
+        uuid: createGroupMemberInput.group_uuid,
+        user_uuid: createGroupMemberInput.user_uuid,
+      };
+
+      prismaMock.group.create.mockResolvedValue(newGroup);
+      prismaMock.groupMember.create.mockResolvedValue(groupMemberMock);
+
+      await service.create(createGroupInput);
+
+      const mockedGroupMemberCreateMethod = jest.spyOn(
+        groupMemberService,
+        'create',
+      );
+
+      expect(mockedGroupMemberCreateMethod).toHaveBeenCalled();
+      expect(prismaMock.groupMember.create).toHaveBeenCalledWith(
+        createGroupMemberInput,
+      );
     });
   });
 

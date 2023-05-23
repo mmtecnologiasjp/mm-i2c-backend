@@ -1,4 +1,5 @@
 import { Group } from '@prisma/client';
+import { generateUUID } from '../../../shared/utils/uuid/generateUUID';
 
 const group: Group = {
   name: 'group1',
@@ -8,14 +9,14 @@ const group: Group = {
   deleted_at: null,
   image_url: '',
   updated_at: new Date(),
-  uuid: '01',
+  uuid: generateUUID(),
 };
 
 const createGroupInput = {
   name: 'group1',
   description: 'description1',
   image_url: '',
-  creator_uuid: '02',
+  creator_uuid: '01',
 };
 
 const updateGroupInput = {
