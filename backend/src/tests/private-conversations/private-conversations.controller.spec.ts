@@ -20,20 +20,12 @@ describe('Private Conversation Controller', () => {
     expect(controller).toBeDefined();
   });
 
-  describe('create', () => {
-    it('should be defined', () => {
+  describe('All methods should be defined', () => {
+    it('create method should be defined', () => {
       expect(controller.create).toBeDefined();
     });
-  });
 
-  describe('findOne', () => {
-    it('should be defined', () => {
-      expect(controller.findOne).toBeDefined();
-    });
-  });
-
-  describe('findAllByUserUUID', () => {
-    it('should be defined', () => {
+    it('findPrivateConversationsByUserUUID method should be defined', () => {
       expect(controller.findAllByUserUUID).toBeDefined();
     });
   });

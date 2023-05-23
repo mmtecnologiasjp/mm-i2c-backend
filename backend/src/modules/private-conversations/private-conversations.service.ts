@@ -20,7 +20,7 @@ export class PrivateConversationsService {
 
   findAllByUserUUID(uuid: string) {
     return prisma.privateConversation.findMany({
-      where: { from_uuid: uuid, OR: { to_uuid: uuid } },
+      where: { OR: [{ from_uuid: uuid }, { to_uuid: uuid }] },
     });
   }
 
@@ -29,6 +29,7 @@ export class PrivateConversationsService {
       where: { uuid },
       include: {
         messages: true,
+        tasks: true,
       },
     });
   }
