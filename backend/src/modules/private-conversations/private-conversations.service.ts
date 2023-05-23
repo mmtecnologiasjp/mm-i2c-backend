@@ -34,6 +34,15 @@ export class PrivateConversationsService {
     });
   }
 
+  findOne(uuid: string) {
+    return prisma.privateConversation.findUnique({
+      where: { uuid },
+      include: {
+        messages: true,
+      },
+    });
+  }
+
   private _handleError(
     error: Error | Prisma.PrismaClientKnownRequestError | null,
   ) {
