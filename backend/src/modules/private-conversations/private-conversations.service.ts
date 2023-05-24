@@ -24,17 +24,19 @@ export class PrivateConversationsService {
       select: { from: true, to: true },
     });
 
-    const getOtherUserOnConversation = users.map((item) => {
+    const getOtherUsersOnConversation = users.map((item) => {
       const { from, to } = item;
 
-      if (from.uuid === uuid) {
+      const userStartedConversation = from.uuid === uuid;
+
+      if (userStartedConversation) {
         return to;
       }
 
       return from;
     });
 
-    return getOtherUserOnConversation;
+    return getOtherUsersOnConversation;
   }
 
   findOne(uuid: string) {
