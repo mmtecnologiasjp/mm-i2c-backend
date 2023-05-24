@@ -52,6 +52,7 @@ describe('Private Conversations Service', () => {
         select: {
           from: true,
           to: true,
+          uuid: true,
         },
       });
     });
