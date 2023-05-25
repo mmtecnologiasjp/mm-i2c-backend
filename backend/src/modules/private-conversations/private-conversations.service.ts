@@ -18,10 +18,25 @@ export class PrivateConversationsService {
     return data;
   }
 
-  findAllByUserUUID(uuid: string) {
-    return prisma.privateConversation.findMany({
+  async findAllByUserUUID(uuid: string) {
+    const users = await prisma.privateConversation.findMany({
       where: { OR: [{ from_uuid: uuid }, { to_uuid: uuid }] },
+      select: { from: true, to: true, uuid: true },
     });
+
+    const getOtherUsersOnConversation = users.map((item) => {
+      const { from, to } = item;
+
+      const userStartedConversation = from.uuid === uuid;
+
+      if (userStartedConversation) {
+        return { ...to, privateConversationUuid: item.uuid };
+      }
+
+      return { ...from, privateConversationUuid: item.uuid };
+    });
+
+    return getOtherUsersOnConversation;
   }
 
   findOne(uuid: string) {

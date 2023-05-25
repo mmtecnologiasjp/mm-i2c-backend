@@ -9,10 +9,15 @@ import {
 } from 'src/shared/utils/swagger/endpoints-decorators';
 import { PrivateConversation } from './entities/private-conversation.entity';
 import { PrivateConversationWithMessages } from './swagger/schemas/private-conversations-with-messages';
+import { PrivateConversationsUser } from './swagger/schemas/private-conversations-users';
 
 @ApiEndpoints({
   tag: 'PrivateConversations',
-  schemas: [PrivateConversation, PrivateConversationWithMessages],
+  schemas: [
+    PrivateConversation,
+    PrivateConversationWithMessages,
+    PrivateConversationsUser,
+  ],
 })
 @Controller('private-conversations')
 export class PrivateConversationsController {
@@ -35,7 +40,7 @@ export class PrivateConversationsController {
   }
 
   @Get('/user/:userUUID')
-  @ApiGetAll({ Schema: PrivateConversation })
+  @ApiGetAll({ Schema: PrivateConversationsUser })
   findAllByUserUUID(@Param('userUUID') userUUID: string) {
     return this.privateConversationsService.findAllByUserUUID(userUUID);
   }
