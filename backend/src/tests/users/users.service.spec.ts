@@ -50,12 +50,12 @@ describe('Users Serice', () => {
     });
   });
 
-  describe('findOneByEmail', () => {
-    it('should return a user found by email', async () => {
-      prismaMock.user.findUnique.mockResolvedValue(userMock);
-      await service.findOneByEmail(userMock.email);
-      expect(prismaMock.user.findUnique).toBeCalledWith({
-        where: { email: userMock.email },
+  describe('searchByEmail', () => {
+    it('should return an array of users found by email', async () => {
+      prismaMock.user.findMany.mockResolvedValue([userMock]);
+      await service.searchByEmail(userMock.email);
+      expect(prismaMock.user.findMany).toBeCalledWith({
+        where: { email: { contains: userMock.email, mode: 'insensitive' } },
       });
     });
   });

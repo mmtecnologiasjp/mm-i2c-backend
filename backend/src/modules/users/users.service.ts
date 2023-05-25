@@ -41,8 +41,10 @@ export class UsersService {
     return user;
   }
 
-  async findOneByEmail(email: string) {
-    const user = await prisma.user.findUnique({ where: { email } });
+  async searchByEmail(email: string) {
+    const user = await prisma.user.findMany({
+      where: { email: { contains: email, mode: 'insensitive' } },
+    });
 
     if (!user) return [];
 

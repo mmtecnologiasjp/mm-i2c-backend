@@ -36,9 +36,9 @@ describe('Users Controller', () => {
     });
   });
 
-  describe('findOneByEmail', () => {
+  describe('searchByEmail', () => {
     it('should be defined', () => {
-      expect(controller.findOneByEmail).toBeDefined();
+      expect(controller.searchByEmail).toBeDefined();
     });
   });
 
