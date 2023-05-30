@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Put } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -13,7 +22,7 @@ import {
 import { User } from './entities/user.entity';
 import { SoftDeletedUser } from './swagger/users.custom-schemas';
 import { EmailParam } from 'src/shared/utils/class-validator/validators/EmailParam';
-import { ApiParam } from '@nestjs/swagger';
+import { ApiParam, ApiQuery } from '@nestjs/swagger';
 
 @ApiEndpoints({ tag: 'Users', schemas: [User, SoftDeletedUser] })
 @Controller('users')
@@ -38,15 +47,14 @@ export class UsersController {
     return this.usersService.findOne(uuid);
   }
 
-  @Get('/email/:email')
+  @Get('/search/email')
   @ApiGetOne({ Schema: User })
-  @ApiParam({
-    name: 'email',
-    required: true,
+  @ApiQuery({
     type: 'string',
+    name: 'email',
   })
-  findOneByEmail(@Param() params: EmailParam) {
-    return this.usersService.findOneByEmail(params.email);
+  searchByEmail(@Query('searchParameter') searchParameter: string) {
+    return this.usersService.searchByEmail(searchParameter);
   }
 
   @Patch(':uuid')
