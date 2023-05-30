@@ -4,6 +4,11 @@ import { MessagesSeeds } from './Tables/Messages';
 import { PrivateConversationsSeeds } from './Tables/PrivateConversation';
 import { UsersSeeds } from './Tables/Users';
 
+export type OmitTimestamps<T> = Omit<
+  T,
+  'created_at' | 'updated_at' | 'deleted_at'
+>;
+
 async function main() {
   await UsersSeeds.execute();
   await PrivateConversationsSeeds.execute();

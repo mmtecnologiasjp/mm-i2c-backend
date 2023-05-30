@@ -1,5 +1,8 @@
 import { faker } from '@faker-js/faker';
 import { PrismaClient } from '@prisma/client';
+import { groupsUuid } from './Groups';
+import { userUuids } from './Users';
+import { privateConversationUuids } from './PrivateConversation';
 const prisma = new PrismaClient();
 export class MessagesSeeds {
   static async execute() {
@@ -8,24 +11,24 @@ export class MessagesSeeds {
         data: {
           content: faker.lorem.paragraph(12),
           type: 'text',
-          private_conversation_uuid: '01',
-          sender_uuid: `0${i + 1}`,
+          private_conversation_uuid: privateConversationUuids[i],
+          sender_uuid: userUuids[i],
         },
       });
-      console.log(`Created message with id: ${message.uuid}`);
+      console.log(`Created message with uuid: ${message.uuid}`);
     }
 
     for (let i = 0; i < 5; i++) {
       const privateMessage = await prisma.message.create({
         data: {
           content: faker.lorem.paragraph(12),
-          group_uuid: '01',
+          group_uuid: groupsUuid[i],
           type: 'text',
-          sender_uuid: `02`,
+          sender_uuid: userUuids[i],
         },
       });
 
-      console.log(`Created private message with id: ${privateMessage.uuid}`);
+      console.log(`Created private message with uuid: ${privateMessage.uuid}`);
     }
   }
 }
