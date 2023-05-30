@@ -8,14 +8,14 @@ import {
   ApiGetOne,
 } from 'src/shared/utils/swagger/endpoints-decorators';
 import { PrivateConversation } from './entities/private-conversation.entity';
-import { PrivateConversationWithMessages } from './swagger/schemas/private-conversations-with-messages';
+import { PrivateConversationWithMessagesAndTasks } from './swagger/schemas/private-conversations-with-messages';
 import { PrivateConversationsUser } from './swagger/schemas/private-conversations-users';
 
 @ApiEndpoints({
   tag: 'PrivateConversations',
   schemas: [
     PrivateConversation,
-    PrivateConversationWithMessages,
+    PrivateConversationWithMessagesAndTasks,
     PrivateConversationsUser,
   ],
 })
@@ -26,7 +26,7 @@ export class PrivateConversationsController {
   ) {}
 
   @Post()
-  @ApiCreate({ Schema: PrivateConversation })
+  @ApiCreate({ Schema: PrivateConversationsUser })
   create(@Body() createPrivateConversationDto: CreatePrivateConversationDto) {
     return this.privateConversationsService.create(
       createPrivateConversationDto,
@@ -34,7 +34,7 @@ export class PrivateConversationsController {
   }
 
   @Get('/:uuid')
-  @ApiGetOne({ Schema: PrivateConversationWithMessages })
+  @ApiGetOne({ Schema: PrivateConversationWithMessagesAndTasks })
   findOne(@Param('uuid') uuid: string) {
     return this.privateConversationsService.findOne(uuid);
   }
