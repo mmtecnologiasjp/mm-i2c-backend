@@ -40,7 +40,9 @@ describe('Private Conversations Service', () => {
       prismaMock.privateConversation.findMany.mockResolvedValue([
         privateConversationWithOnlyUsers,
       ]);
-      await service.findAllByUserUUID(privateConversationFromUserMock.uuid);
+      const privateConversationUsers = await service.findAllByUserUUID(
+        privateConversationFromUserMock.uuid,
+      );
 
       expect(prismaMock.privateConversation.findMany).toBeCalledWith({
         where: {
@@ -55,6 +57,10 @@ describe('Private Conversations Service', () => {
           uuid: true,
         },
       });
+
+      expect(privateConversationUsers.at(0)).toHaveProperty(
+        'privateConversationUuid',
+      );
     });
   });
 
@@ -64,28 +70,38 @@ describe('Private Conversations Service', () => {
 
       expect(prismaMock.privateConversation.findUnique).toHaveBeenCalledWith({
         where: { uuid: privateConversationMock.uuid },
-        include: { tasks: true, messages: true },
+        include: {
+          tasks: true,
+          messages: {
+            include: {
+              sender: true,
+            },
+          },
+        },
       });
     });
   });
 
   describe('create', () => {
-    it('should create a private conversation', async () => {
-      const createPrivateConversationMock = jest.spyOn(
-        tryCatchMock,
-        'tryCatch',
+    it('should create a private conversation and return user info', async () => {
+      const privateConversationWithOnlyUsers = {
+        ...privateConversationMock,
+        to: userMock,
+        from: userMock,
+      };
+
+      prismaMock.privateConversation.create.mockResolvedValue(
+        privateConversationWithOnlyUsers,
       );
 
-      createPrivateConversationMock.mockResolvedValue([
-        privateConversationMock,
-        null,
-      ] as unknown as TryCatch<PrivateConversation>);
-
-      const privateConversationResponse = await service.create(
+      const privateConversationUser = await service.create(
         createPrivateConversationInput,
       );
-
-      expect(privateConversationResponse).toEqual(privateConversationMock);
+      expect(prismaMock.privateConversation.create).toBeCalledWith({
+        data: createPrivateConversationInput,
+        select: { from: true, to: true, uuid: true },
+      });
+      expect(privateConversationUser).toHaveProperty('privateConversationUuid');
     });
 
     it('should not create a private conversation', async () => {
