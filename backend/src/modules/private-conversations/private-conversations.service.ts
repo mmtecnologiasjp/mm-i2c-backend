@@ -1,21 +1,21 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreatePrivateConversationDto } from './dto/create-private-conversation.dto';
-import { tryCatch } from '../../shared/utils/tryCatch';
 import { Prisma } from '@prisma/client';
 import prisma from '../../client';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class PrivateConversationsService {
   async create(createPrivateConversationDto: CreatePrivateConversationDto) {
-    const createPrivateConversationPromise = prisma.privateConversation.create({
+    const createdPrivateConversation = await prisma.privateConversation.create({
       data: createPrivateConversationDto,
+      select: { from: true, to: true, uuid: true },
     });
 
-    const [data, error] = await tryCatch(createPrivateConversationPromise);
-
-    this._handleError(error);
-
-    return data;
+    return this._getOtherUserOnConversation(
+      createdPrivateConversation,
+      createPrivateConversationDto.from_uuid,
+    );
   }
 
   async findAllByUserUUID(uuid: string) {
@@ -24,29 +24,50 @@ export class PrivateConversationsService {
       select: { from: true, to: true, uuid: true },
     });
 
-    const getOtherUsersOnConversation = users.map((item) => {
-      const { from, to } = item;
+    const otherUsersOnConversation = users.map((item) =>
+      this._getOtherUserOnConversation(item, uuid),
+    );
 
-      const userStartedConversation = from.uuid === uuid;
-
-      if (userStartedConversation) {
-        return { ...to, privateConversationUuid: item.uuid };
-      }
-
-      return { ...from, privateConversationUuid: item.uuid };
-    });
-
-    return getOtherUsersOnConversation;
+    return otherUsersOnConversation;
   }
 
   findOne(uuid: string) {
     return prisma.privateConversation.findUnique({
       where: { uuid },
       include: {
-        messages: true,
+        messages: {
+          include: {
+            sender: true,
+          },
+        },
         tasks: true,
       },
     });
+  }
+
+  private _getOtherUserOnConversation(
+    privateConversation: {
+      from: User;
+      to: User;
+      uuid: string;
+    },
+    uuidSent: string,
+  ) {
+    const { from, to } = privateConversation;
+
+    const userStartedConversation = from.uuid === uuidSent;
+
+    if (userStartedConversation) {
+      return {
+        ...to,
+        privateConversationUuid: privateConversation.uuid,
+      };
+    }
+
+    return {
+      ...from,
+      privateConversationUuid: privateConversation.uuid,
+    };
   }
 
   private _handleError(
