@@ -12,11 +12,11 @@ import {
   ApiUpdate,
 } from 'src/shared/utils/swagger/endpoints-decorators';
 import { SoftDeletedGroup } from './swagger/groups.custom-schemas';
-import { GroupMessages } from './swagger/schemas/group-messages';
+import { GroupMessagesTasks } from './swagger/schemas/group-messages-tasks';
 
 @ApiEndpoints({
   tag: 'Groups',
-  schemas: [Group, SoftDeletedGroup, GroupMessages],
+  schemas: [Group, SoftDeletedGroup, GroupMessagesTasks],
 })
 @Controller('groups')
 export class GroupsController {
@@ -35,7 +35,7 @@ export class GroupsController {
   }
 
   @Get(':uuid')
-  @ApiGetOne({ Schema: GroupMessages })
+  @ApiGetOne({ Schema: GroupMessagesTasks })
   findOne(@Param('uuid') uuid: string) {
     return this.groupsService.findOne(uuid);
   }

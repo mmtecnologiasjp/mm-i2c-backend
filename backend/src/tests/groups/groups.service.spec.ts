@@ -14,6 +14,7 @@ import {
 } from '../group-members/mock/group-members.mock';
 import { GroupMembersService } from '../../modules/group-members/group-members.service';
 import { userMock } from '../users/mock/users.service.mock';
+import { taskMock } from '../tasks/mock/tasks.mock';
 
 jest.useFakeTimers().setSystemTime(new Date('2023-01-01'));
 
@@ -57,12 +58,25 @@ describe('GroupsService', () => {
       prismaMock.group.findUnique.mockResolvedValue({
         ...group,
         messages: prismaMock.message.findMany.mockResolvedValue([messageMock]),
+        tasks: prismaMock.task.findMany.mockResolvedValue([taskMock]),
       });
 
-      const groupFound = await service.findOne('01');
+      const groupFound = await service.findOne(group.uuid);
       expect(groupFound).toMatchObject(group);
       expect(groupFound).not.toHaveProperty('uuid', '02');
       expect(groupFound).toHaveProperty('messages');
+      expect(groupFound).toHaveProperty('tasks');
+      expect(prismaMock.group.findUnique).toHaveBeenCalledWith({
+        where: { uuid: group.uuid },
+        include: {
+          messages: {
+            include: {
+              sender: true,
+            },
+          },
+          tasks: true,
+        },
+      });
     });
   });
 
