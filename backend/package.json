@@ -21,7 +21,8 @@
     "docker:exec": "docker exec -it mmchat_nestjs",
     "migrate": "yarn docker:exec npx prisma migrate dev --name init",
     "seeds": "yarn docker:exec yarn prisma db seed",
-    "generate": "yarn docker:exec npx prisma generate && echo 'Restart your text editor to apply changes.'"
+    "generate": "yarn docker:exec npx prisma generate && echo 'Restart your text editor to apply changes.'",
+    "migrate:reset": "prisma migrate reset"
   },
   "prisma": {
     "seed": "ts-node prisma/seeds/index.ts"
