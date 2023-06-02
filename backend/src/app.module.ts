@@ -6,6 +6,7 @@ import { PrivateConversationsModule } from './modules/private-conversations/priv
 import { TasksModule } from './modules/tasks/tasks.module';
 import { MessagesModule } from './modules/messages/messages.module';
 import { MessageGateway } from './message/message.gateway';
+import { MessagesService } from './modules/messages/messages.service';
 
 @Module({
   imports: [
@@ -16,6 +17,6 @@ import { MessageGateway } from './message/message.gateway';
     MessagesModule,
     TasksModule,
   ],
-  providers: [MessageGateway],
+  providers: [MessageGateway, MessagesService],
 })
 export class AppModule {}

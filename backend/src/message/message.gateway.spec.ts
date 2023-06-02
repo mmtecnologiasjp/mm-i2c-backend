@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MessageGateway } from './message.gateway';
+import { MessagesService } from 'src/modules/messages/messages.service';
 
 describe('MessageGateway', () => {
   let gateway: MessageGateway;
