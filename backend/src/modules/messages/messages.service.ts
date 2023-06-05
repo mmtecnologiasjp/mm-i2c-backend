@@ -6,7 +6,12 @@ import prisma from 'src/client';
 @Injectable()
 export class MessagesService {
   create(createMessageDto: CreateMessageDto) {
-    return prisma.message.create({ data: createMessageDto });
+    return prisma.message.create({
+      data: createMessageDto,
+      include: {
+        sender: true,
+      },
+    });
   }
 
   findAll() {

@@ -33,6 +33,9 @@ describe('Messages Service', () => {
       expect(messageCreatd).toEqual(messageMock);
       expect(prismaMock.message.create).toHaveBeenCalledWith({
         data: createMessageInput,
+        include: {
+          sender: true,
+        },
       });
     });
   });
