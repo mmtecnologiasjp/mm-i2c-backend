@@ -7,6 +7,7 @@ import { TasksModule } from './modules/tasks/tasks.module';
 import { MessagesModule } from './modules/messages/messages.module';
 import { MessageGateway } from './message/message.gateway';
 import { MessagesService } from './modules/messages/messages.service';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { MessagesService } from './modules/messages/messages.service';
     GroupMembersModule,
     MessagesModule,
     TasksModule,
+    AuthModule,
   ],
   providers: [MessageGateway, MessagesService],
 })
