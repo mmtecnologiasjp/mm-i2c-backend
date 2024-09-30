@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
 import { PrivateConversationsService } from './private-conversations.service';
 import { CreatePrivateConversationDto } from './dto/create-private-conversation.dto';
 import {
@@ -7,6 +7,7 @@ import {
   ApiGetAll,
   ApiGetOne,
 } from 'src/shared/utils/swagger/endpoints-decorators';
+import { AuthGuard } from '../auth/guard/auth.guard';
 import { PrivateConversation } from './entities/private-conversation.entity';
 import { PrivateConversationWithMessagesAndTasks } from './swagger/schemas/private-conversations-with-messages';
 import { PrivateConversationsUser } from './swagger/schemas/private-conversations-users';
@@ -27,6 +28,7 @@ export class PrivateConversationsController {
 
   @Post()
   @ApiCreate({ Schema: PrivateConversationsUser })
+  @UseGuards(AuthGuard)
   create(@Body() createPrivateConversationDto: CreatePrivateConversationDto) {
     return this.privateConversationsService.create(
       createPrivateConversationDto,
@@ -35,12 +37,14 @@ export class PrivateConversationsController {
 
   @Get('/:uuid')
   @ApiGetOne({ Schema: PrivateConversationWithMessagesAndTasks })
+  @UseGuards(AuthGuard)
   findOne(@Param('uuid') uuid: string) {
     return this.privateConversationsService.findOne(uuid);
   }
 
   @Get('/user/:userUUID')
   @ApiGetAll({ Schema: PrivateConversationsUser })
+  @UseGuards(AuthGuard)
   findAllByUserUUID(@Param('userUUID') userUUID: string) {
     return this.privateConversationsService.findAllByUserUUID(userUUID);
   }

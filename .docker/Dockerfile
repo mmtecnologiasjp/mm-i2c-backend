@@ -4,6 +4,6 @@ RUN apk add --no-cache bash
 
 RUN npm install -g @nestjs/cli@7.5.6
 
-USER node
+#USER node -> esse aqui e o problem do qual comentei no chat do rock blz ?
 
 WORKDIR /home/node/app

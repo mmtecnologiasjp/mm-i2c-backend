@@ -13,6 +13,14 @@ import { PrismaError } from 'prisma-error-enum';
 
 @Injectable()
 export class UsersService {
+  async authenticate(createUserDto: CreateUserDto) {
+    const user = await this._getUserByEmail(createUserDto.email);
+
+    if (!user) throw new NotFoundException('User not found');
+
+    return user;
+  }
+
   async create(createUserDto: CreateUserDto) {
     const user = await this._getUserByEmail(createUserDto.email);
 
@@ -42,12 +50,13 @@ export class UsersService {
   }
 
   async searchByEmail(email: string) {
-    const user = await prisma.user.findMany({
-      where: { email: { contains: email, mode: 'insensitive' } },
+    const user = await prisma.user.findUnique({
+      where: { email },
     });
 
-    if (!user) return [];
+    if (!user) throw new NotFoundException('User not found');
 
+    console.log('user', user);
     return user;
   }
 
