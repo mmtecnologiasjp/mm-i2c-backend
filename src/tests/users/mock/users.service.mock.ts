@@ -16,6 +16,7 @@ export const userMock: User = {
   created_at: new Date(),
   updated_at: new Date(),
   deleted_at: null,
+  sso_uuid: generateUUID(),
 };
 
 export const createUserInput: CreateUserDto = {
