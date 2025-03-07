@@ -17,11 +17,11 @@ model User {
   username   String
   email      String     @unique
   status     StatusEnum
-  password   String
   avatar_url String?
   created_at DateTime   @default(now())
   updated_at DateTime   @updatedAt
   deleted_at DateTime?
+  sso_uuid   String
 
   groups                     Group[]
   group_member               GroupMember[]

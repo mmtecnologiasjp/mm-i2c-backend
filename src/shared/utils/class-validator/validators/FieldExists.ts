@@ -18,6 +18,10 @@ export class FieldExists implements ValidatorConstraintInterface {
 
     if (!valueWasSent) return true;
 
+    if (typeof relatedModel !== 'string') {
+      throw new Error('Invalid relatedModel, must be a string');
+    }
+
     const relatedEntity = await prisma[relatedModel].findUnique({
       where: { [relatedField]: value },
       select: { uuid: true },

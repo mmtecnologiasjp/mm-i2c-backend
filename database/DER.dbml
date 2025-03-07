@@ -9,8 +9,8 @@ Table users {
   username varchar
   email varchar
   status Status
-  password varchar
   avatar_url varchar
+  sso_uuid uuid
 
   created_at timestamp
   updated_at timestamp

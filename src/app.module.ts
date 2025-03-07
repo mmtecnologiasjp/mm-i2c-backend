@@ -9,6 +9,7 @@ import { MessageGateway } from './message/message.gateway';
 import { MessagesService } from './modules/messages/messages.service';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { GetUserInfoInterceptor } from './interceptors/get-user-info.interceptor';
+import { SsoModule } from './modules/sso/sso.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { GetUserInfoInterceptor } from './interceptors/get-user-info.interceptor
     GroupMembersModule,
     MessagesModule,
     TasksModule,
+    SsoModule,
   ],
   providers: [
     MessageGateway,

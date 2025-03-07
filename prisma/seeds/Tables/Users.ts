@@ -2,6 +2,7 @@ import { User } from '@prisma/client';
 import prisma from '../../../src/client';
 import { faker } from '@faker-js/faker';
 import { OmitTimestamps } from '..';
+import { randomUUID } from 'crypto';
 
 export const userUuids = [
   'f47ac10b-58cc-4372-a567-0e02b2c3d479',
@@ -33,8 +34,8 @@ export class UsersSeeds {
           'Banned',
           'Quarantine',
         ]),
-        password: faker.internet.password(),
         avatar_url: faker.internet.avatar(),
+        sso_uuid: randomUUID(),
       });
     }
 
