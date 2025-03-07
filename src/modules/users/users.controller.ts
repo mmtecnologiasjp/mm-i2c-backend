@@ -21,8 +21,7 @@ import {
 } from 'src/shared/utils/swagger/endpoints-decorators';
 import { User } from './entities/user.entity';
 import { SoftDeletedUser } from './swagger/users.custom-schemas';
-import { EmailParam } from 'src/shared/utils/class-validator/validators/EmailParam';
-import { ApiParam, ApiQuery } from '@nestjs/swagger';
+import { ApiQuery } from '@nestjs/swagger';
 
 @ApiEndpoints({ tag: 'Users', schemas: [User, SoftDeletedUser] })
 @Controller('users')
@@ -67,5 +66,10 @@ export class UsersController {
   @ApiSoftDelete({ SoftDeletedSchema: SoftDeletedUser })
   softDelete(@Param('uuid') uuid: string) {
     return this.usersService.softDelete(uuid);
+  }
+
+  @Get('/sso/:uuid')
+  findOneBySSO(@Param('uuid') uuid: string) {
+    return this.usersService.findOneBySSO(uuid);
   }
 }
