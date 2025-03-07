@@ -10,7 +10,6 @@ export const userMock: User = {
   last_name: 'Doe',
   email: faker.internet.email(),
   avatar_url: faker.internet.avatar(),
-  password: faker.internet.password(),
   status: StatusEnum.Active,
   username: 'johndoe',
   created_at: new Date(),
@@ -23,9 +22,9 @@ export const createUserInput: CreateUserDto = {
   first_name: 'John',
   last_name: 'Doe',
   email: faker.internet.email(),
-  password: faker.internet.password(),
   status: StatusEnum.Active,
   username: 'johndoe',
+  sso_uuid: generateUUID(),
 };
 
 export const updateUserInput: UpdateUserDto = {
@@ -33,7 +32,6 @@ export const updateUserInput: UpdateUserDto = {
   last_name: 'Doe',
   avatar_url: faker.internet.avatar(),
   email: '',
-  password: '1234',
   status: StatusEnum.Active,
   username: 'jane',
 };
