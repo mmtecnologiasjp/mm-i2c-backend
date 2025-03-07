@@ -4,13 +4,13 @@ import {
   IsRequiredEmail,
   IsRequiredEnum,
   IsRequiredString,
+  IsRequiredUUID,
 } from 'src/shared/utils/class-validator/decorators';
 import {
   ApiPropertyEmail,
   ApiPropertyEnum,
   ApiPropertyLastName,
   ApiPropertyRequiredFirstName,
-  ApiPropertyString,
   ApiPropertyRequiredUUID,
 } from 'src/shared/utils/swagger/properties-decorators';
 
@@ -32,16 +32,11 @@ export class CreateUserDto {
   @ApiPropertyEmail()
   email: string;
 
-  @IsOptional()
-  @IsString()
-  @ApiPropertyString()
-  password?: string;
-
   @IsRequiredEnum(StatusEnum)
   @ApiPropertyEnum({ Default: StatusEnum.Active, Enum: StatusEnum })
   status: StatusEnum;
 
-  @IsUUID()
+  @IsRequiredUUID()
   @ApiPropertyRequiredUUID()
-  sso_uuid?: string;
+  sso_uuid: string;
 }
