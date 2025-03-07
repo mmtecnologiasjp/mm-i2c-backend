@@ -35,6 +35,7 @@ export class UsersSeeds {
         ]),
         password: faker.internet.password(),
         avatar_url: faker.internet.avatar(),
+        sso_uuid: null,
       });
     }
 
