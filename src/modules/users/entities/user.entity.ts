@@ -7,6 +7,7 @@ import {
   ApiPropertyLastName,
   ApiPropertyRequiredFirstName,
   ApiPropertyRequiredString,
+  ApiPropertyString,
   ApiPropertyTimestamp,
   ApiPropertyUUID,
 } from 'src/shared/utils/swagger/properties-decorators';
@@ -30,8 +31,8 @@ export class User implements PrismaUser {
   @ApiPropertyEnum({ Default: StatusEnum.Active, Enum: StatusEnum })
   status: StatusEnum;
 
-  @ApiPropertyRequiredString()
-  password: string;
+  @ApiPropertyString()
+  password: string | null;
 
   @ApiPropertyImageURL()
   avatar_url: string | null;
@@ -44,4 +45,7 @@ export class User implements PrismaUser {
 
   @ApiPropertyDeletedAt()
   deleted_at: Date | null;
+
+  @ApiPropertyUUID()
+  sso_uuid: string | null;
 }
