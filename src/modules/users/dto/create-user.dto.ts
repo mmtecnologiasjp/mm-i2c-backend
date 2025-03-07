@@ -1,5 +1,5 @@
 import { StatusEnum } from '@prisma/client';
-import { IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString, IsUUID } from 'class-validator';
 import {
   IsRequiredEmail,
   IsRequiredEnum,
@@ -10,7 +10,8 @@ import {
   ApiPropertyEnum,
   ApiPropertyLastName,
   ApiPropertyRequiredFirstName,
-  ApiPropertyRequiredString,
+  ApiPropertyString,
+  ApiPropertyRequiredUUID,
 } from 'src/shared/utils/swagger/properties-decorators';
 
 export class CreateUserDto {
@@ -31,11 +32,16 @@ export class CreateUserDto {
   @ApiPropertyEmail()
   email: string;
 
-  @IsRequiredString()
-  @ApiPropertyRequiredString()
-  password: string;
+  @IsOptional()
+  @IsString()
+  @ApiPropertyString()
+  password?: string;
 
   @IsRequiredEnum(StatusEnum)
   @ApiPropertyEnum({ Default: StatusEnum.Active, Enum: StatusEnum })
   status: StatusEnum;
+
+  @IsUUID()
+  @ApiPropertyRequiredUUID()
+  sso_uuid?: string;
 }
