@@ -99,4 +99,10 @@ export class UsersService {
       throw new ConflictException('Unique constraint violation');
     }
   }
+
+  findOneBySSO(ssoUUID: string) {
+    return prisma.user.findFirst({
+      where: { sso_uuid: ssoUUID },
+    });
+  }
 }

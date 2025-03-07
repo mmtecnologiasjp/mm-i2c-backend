@@ -31,9 +31,6 @@ export class User implements PrismaUser {
   @ApiPropertyEnum({ Default: StatusEnum.Active, Enum: StatusEnum })
   status: StatusEnum;
 
-  @ApiPropertyString()
-  password: string | null;
-
   @ApiPropertyImageURL()
   avatar_url: string | null;
 
@@ -47,5 +44,5 @@ export class User implements PrismaUser {
   deleted_at: Date | null;
 
   @ApiPropertyUUID()
-  sso_uuid: string | null;
+  sso_uuid: string;
 }
